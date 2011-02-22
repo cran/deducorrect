@@ -17,6 +17,9 @@ edit distance (default = 1) to be selected. If there are more then 1 solutions p
 
 \code{correctTypos} returns an object of class \code{\link[=deducorrect-object]{deducorrect}} object describing the status of the record and the corrections that have been applied.
 
+Inequalities in editmatrix \code{E} will be ignored in this algorithm, so if this is the case, the corrected records
+are valid according to the equality restrictions, but may be incorrect for the given inequalities.
+
 Please note that if the returned status of a record is "partial" the corrected record still is not valid.
 The partially corrected record will contain less errors and will violate less constraints. 
 Also note that the status "valid" and "corrected" have to be interpreted in combination with \code{eps}.

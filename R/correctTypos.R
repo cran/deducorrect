@@ -13,6 +13,9 @@
 #'
 #' \code{correctTypos} returns an object of class \code{\link[=deducorrect-object]{deducorrect}} object describing the status of the record and the corrections that have been applied.
 #'
+#' Inequalities in editmatrix \code{E} will be ignored in this algorithm, so if this is the case, the corrected records
+#' are valid according to the equality restrictions, but may be incorrect for the given inequalities.
+#'
 #' Please note that if the returned status of a record is "partial" the corrected record still is not valid.
 #' The partially corrected record will contain less errors and will violate less constraints. 
 #' Also note that the status "valid" and "corrected" have to be interpreted in combination with \code{eps}.
@@ -52,22 +55,28 @@ correctTypos <- function( E
                         
    stopifnot(is.editmatrix(E), is.data.frame(dat))
    
+
+   a <- getC(E)
    eq <- getOps(E) == "=="
    if (!all(eq)){
-      stop("E must be an equality edit matrix. Edits ", which(!eq)," are inequalities.")
+      warning("E contains inequalities. Edits ", which(!eq)," will be ignored.\n Records with status 'valid' or 
+      'corrected' may therefore be invalid for the complete editmatrix E.")
+      E <- as.editmatrix(E[eq,,drop=FALSE], a[eq])
+      a <- a[eq]
    }
+   vars <- getVars(E)   
    
    #align names of E and dat, beware m contains only constrained, numeric variables at this point
-   m <- as.matrix(dat[colnames(E)])
+   m <- as.matrix(dat[vars])
    n <- nrow(m)
    
    status <- status(n)
    corrections <- NULL
 
    # only loop over complete records
-   cc <- which(complete.cases(m))
+  cc <- which(complete.cases(m))
 	for (i in cc){
-	   chk <- getTypoCorrection(E,m[i,], eps, maxdist)
+      chk <- getTypoCorrection(E,m[i,], eps, maxdist)
       
       status[i] <- chk$status
       
@@ -96,12 +105,13 @@ correctTypos <- function( E
       #m[i, cor[,"var"]]  <- cor[,"new"]      
       m[i, cor[,1]]  <- cor[,3]
       
+      # check if record is now valid with the corrections applied
+      status[i] <- if (sum(abs(a-E%*%m[i,]) > eps) == 0) "corrected"
+                   else "partial"
       cor <- cbind(row=rep(i, nrow(cor)), cor)
       corrections <- rbind(corrections, cor)      
 	}
-   
-   vars <- getVars(E)
-   
+      
    # recreate data.frame dat in original column order, but with the corrections applied
    corrected <- dat   
    corrected[vars] <- as.data.frame(m)[]
@@ -177,7 +187,8 @@ getTypoCorrection <- function( E, x, eps=sqrt(.Machine$double.eps), maxdist=1){
 		return(ret)
    }
    
-   names(I0) <- colnames(E)
+   names(I0) <- getVars(E)
+   names(x) <- NULL
    # retrieve correction canditates for variables that can be changed
    cor <- lapply( which(I0)
                 , function(i){
@@ -186,7 +197,7 @@ getTypoCorrection <- function( E, x, eps=sqrt(.Machine$double.eps), maxdist=1){
                      
                      # correction candidates
                      #TODO check if solution has to be rounded!!!)
-                     x_i_c <- ( (a[edits]-(E[edits,-i] %*% x[-i])) / (E[edits,i]));
+                     x_i_c <- ( (a[edits]-(E[edits,-i, drop=FALSE] %*% x[-i])) / (E[edits,i]));
                      # count their numbers
                      kap <- table(x_i_c)
                      x_i_c <- as.integer(rownames(kap))
@@ -206,15 +217,21 @@ getTypoCorrection <- function( E, x, eps=sqrt(.Machine$double.eps), maxdist=1){
                 )
    cor <- t(do.call(cbind,cor))
    
-   # filter out the corrections that have dist > 1
+   # filter out the corrections that have dist > maxdist
    valid <- cor[,4] <= maxdist
+   
+   if (sum(valid) == 0){
+      # cannot correct this error
+      ret$status <- "invalid"
+      return(ret)
+   }
    
    cor <- cor[valid,,drop=FALSE]
    # optimization matrix
    B <- E[E1,cor[,1], drop=FALSE] != 0
    ret$cor <- cor
    ret$B <- B
-   ret$status <- "corrected"
+   ret$status <- "partial"
    ret
 }
 

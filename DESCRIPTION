@@ -1,7 +1,7 @@
 Package: deducorrect
 Type: Package
 Title: Deductive correction of simple rounding, typing and sign errors
-Version: 0.9
+Version: 0.9-1
 Date: 2011-02-22
 Author: Mark van der Loo, Edwin de Jonge, and Sander Scholtus
 Maintainer: Mark van der Loo <mark.vanderloo@gmail.com>
@@ -13,6 +13,6 @@ LazyLoad: yes
 Depends: editrules (>= 0.4)
 Collate: 'correctRounding.R' 'correctSigns.R' 'correctTypos.R' 'pkg.R'
         'S3deducorrect.R' 'stringdistance.R' 'unimodularity.R' 'util.R'
-Packaged: 2011-02-25 13:51:30 UTC; mark
+Packaged: 2011-03-02 15:53:14 UTC; mark
 Repository: CRAN
-Date/Publication: 2011-02-26 08:21:58
+Date/Publication: 2011-03-02 17:32:12
