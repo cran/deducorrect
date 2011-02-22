@@ -1,7 +1,7 @@
 \name{correctSigns}
 \alias{correctSigns}
 \title{Correct sign errors and value interchanges in data records}
-\usage{correctSigns(E, dat, flip=colnames(E), swap=list(), maxActions=length(flip) +
+\usage{correctSigns(E, dat, flip=getVars(E), swap=list(), maxActions=length(flip) +
     length(swap), maxCombinations=1e+05, eps=sqrt(.Machine$double.eps),
     weight=rep(1, length(flip) + length(swap)), fixate=NA)
 }

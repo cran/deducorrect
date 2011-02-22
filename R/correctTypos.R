@@ -58,7 +58,7 @@ correctTypos <- function( E
    stopifnot(is.editmatrix(E), is.data.frame(dat))
    
    # separate equalities and inequalities
-   a <- getC(E)
+   a <- getb(E)
    eq <- getOps(E) == "=="
    F <- E[!eq,]
    E <- E[eq,]
@@ -89,7 +89,7 @@ correctTypos <- function( E
       }
 
       cor <- chk$cor
-      #sol <- tree(chk$B, cor[,"kappa"])
+      
       sol <- tree(chk$B, cor[,5])
       if (nrow(sol) > 1){
          # if a correction is valid for all found solutions, then it can be applied
@@ -107,7 +107,6 @@ correctTypos <- function( E
       
       #m[i, cor[,"var"]]  <- cor[,"new"]
       x[cor[,1]] <- cor[,3]
-      
       #TODO if any violatedEdits then solution is always partial
       if (all(which(violatedEdits(F, x)) %in% which(violatedEdits(F,m[i,])))){
          m[i,] <- x
@@ -117,7 +116,7 @@ correctTypos <- function( E
          next
       }
       # check if record is now valid with the corrections applied
-      status[i] <- if (sum(abs(a-E%*%m[i,]) > eps) == 0) "corrected"
+      status[i] <- if (sum(abs(a-getA(E)%*%m[i,]) > eps) == 0) "corrected"
                    else "partial"
                    
       cor <- cbind(row=rep(i, nrow(cor)), cor)
@@ -168,8 +167,8 @@ correctTypos <- function( E
 getTypoCorrection <- function( E, x, fixate=FALSE, eps=sqrt(.Machine$double.eps), maxdist=1){
    ret <- list(status=NA)
    
-   a <- getC(E)
-   M <- getMatrix(E)
+   a <- getb(E)
+   M <- getA(E)
    
    # we need this later to check for inequalities   
    x_F <- as.data.frame(t(x))
