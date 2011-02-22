@@ -1,16 +1,17 @@
 resample <- function(x, ...) {
-   x[sample.int(length(x), ...)]
+   if (length(x) <= 1) x
+   else sample(x)
 }
 
 #' Scapegoat algorithm
 #'
 #' @nord
 scapegoat <- function(R0, a0, x,krit=NULL) {
-	 r0 <- nrow(R0)
+	  r0 <- nrow(R0)
     v <- ncol(R0)
     
     if (v < r0){
-       stop("...")
+       return(x)
     }
     
     if (!is.null(krit)){
@@ -34,11 +35,11 @@ scapegoat <- function(R0, a0, x,krit=NULL) {
     x2 <- xt[p2]
     
 	 c <- a0 - (R2 %*% x2)
-    x1 <- solve(R1, c)[,1]
+   x1 <- solve(R1, c)[,1]
 	 sol <- c(x1, x2)
-    #restore original order
-    m <- match(names(x), names(sol))
-    sol[m]
+   #restore original order
+   m <- match(names(x), names(sol))
+   sol[m]
 }
 
 #' Correct records under linear restrictions for rounding errors
@@ -57,7 +58,7 @@ scapegoat <- function(R0, a0, x,krit=NULL) {
 #' @references 
 #' Scholtus S (2008). Algorithms for correcting some obvious
 #' inconsistencies and rounding errors in business survey data. Technical
-#' Report 08015, Netherlands.
+#' Report 08015, Statistics Netherlands.
 #'
 #' @param R editmatrix \eqn{Rx = a}
 #' @param dat \code{data.frame} with the data to be corrected
@@ -71,6 +72,7 @@ scapegoat <- function(R0, a0, x,krit=NULL) {
 #'
 correctRounding <- function(R, dat, Q = NULL, delta=2, K=10, round=TRUE){
    stopifnot(is.editmatrix(R), is.data.frame(dat))
+   #TODO add fixate
    krit <- character(0)
    
    if (!missing(Q)){
@@ -81,13 +83,15 @@ correctRounding <- function(R, dat, Q = NULL, delta=2, K=10, round=TRUE){
    else {
      q <- getOps(R) == ">="
      if (any(q)){
-       Q <- R[q,,drop=FALSE]
+       Q <- as.editmatrix(R[q,,drop=FALSE])
+       krit <- colnames(Q)
+       b <- getC(Q)
      }
    }
    
    eq <- getOps(R) == "=="
    if (!all(eq)){
-      R <- R[eq,,drop=FALSE]
+      R <- as.editmatrix(R[eq,,drop=FALSE])
    }
    
    m <- as.matrix(dat[getVars(R)])
@@ -116,8 +120,10 @@ correctRounding <- function(R, dat, Q = NULL, delta=2, K=10, round=TRUE){
         if (round) 
             sol <- round(sol,0)
         #TODO make this step more generic (so Q can be any inequality matrix)
-        if ( is.null(Q) 
-          || Q %*% x >= b
+        if ( R0 %*% sol == a0
+          && (  is.null(Q) 
+             || Q %*% sol >= b
+             )
            ){
            break
         }

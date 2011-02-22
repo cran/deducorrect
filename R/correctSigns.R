@@ -1,163 +1,126 @@
-#' Try to solve balance edit violations by sign changes
-#' 
-#' This is one of the workhorse functions for \code{\link{correctSigns}}, the other being \code{\link{flipAndSwap}}.
-#' It performs a breadth-first tree search to resolve (near) equality edit violations. The difference with \code{\link{flipAndSwap}}
-#' is that variable swaps are interpreted as two actions (two sign flips).
-#' The solution(s), if any, with as little as possible sign changes are returned.
+#' Apply flips and swaps to a record. 
 #'
+#' @param flips Index vector in r. r will be sign-flipped at flips
+#' @param swaps nx2 matrix denoting value swaps in r.
+#' @param r numerical record.
+#' @return r, with flips and swaps applied
 #'
-#' @param A The \code{matrix} part of an \code{editmatrix}
-#' @param C The \code{CONSTANT} part of an \code{editmatrix}
-#' @param r A numerical record.
-#' @param adapt A logical vector of length \code{ncol(A)} indicating which variables may be changed.
-#' @param maxSigns how many signs may maximally be flipped? 
-#' @param eps Tolerance for equality restriction checking
-#' @param w positive weight vector of \code{length(ncol(A))}
-#' 
-#' @return A \code{list} with vectors of length \code{r} with coefficients 
-#'      in \eqn{\{-1,1\}}. Empty \code{list} if no solution is found.
-#'
-getSignCorrection <- function(A, C, r, adapt, maxSigns, eps, w){
-
-    v <- rep(1,length(r))
-    if (all(abs(A%*%r - C) <= eps)) return(list(v))
-    adapt <- which(adapt)
-    nViolated <- length(adapt)
-    S <- list()
-    weights <- NA 
-    j <- 1
-    for ( nsigns in 1:min(maxSigns, nViolated) ){
-        I <- combn(1:nViolated, nsigns)
-        for ( i in 1:ncol(I) ){
-           s <- v
-           s[adapt[I[, i]]] <- -1
-           if ( all(abs(A %*% (r*s) - C) <= eps) ){
-                S[[j]] <- s
-                j <- j+1
-           }
-        }
-        if ( length(S) > 0 ){ 
-            weights <- w %*% (sapply(S,matrix) < 0)
-            break
-        } 
-    }
-    return(list(signs=S, weights=weights))
+#' @nord
+applyFix <- function(flips, swaps, r){
+    if ( length(flips) > 0 )
+        r[flips] <- -r[flips]
+    if ( !is.null(nrow(swaps)) ) 
+        apply(swaps, 1, function(sw){r[sw] <<- r[sw[2:1]]})
+    return(r)
 }
 
-#' Try to solve balance edit violations by sign changes and/or variable swaps.
+#' Workhorse for correctSigns
 #'
-#' This is one of the workhorse functions for \code{\link{correctSigns}}, the other being \code{\link{getSignCorrection}}. 
-#' It performs a breadth-first tree search to resolve (near) equality edit violations. The difference with 
-#' \code{\link{getSignCorrection}} is that variable swaps are interpreted as a single action.
-#' The solution(s), if any, with as little as possible sign changes are returned.
+#' Warning. this function replaces the deprecated \code{\link{old.getSignCorrection}}
+#' 
+#' @title workhorse for correctSigns
 #'
-#' @param A The \code{matrix} part of an \code{editmatrix}
-#' @param C The \code{CONSTANT} part of an \code{editmatrix}
-#' @param r A numerical record.
-#' @param flip vector of  indices (integers) in r who's values may be swapped.
-#' @param swap nx2 array of index combinations of variables wich may be swapped.
-#' @param eps Tolerance for equality restriction checking
-#' @param w weights vector of length length(flip)+nrow(swap), w[1:lenght(flip)] are penalties for changing variables 
-#'      corresponding to indices in \code{flip}, the remaining entries are penalties for the value interchanges in the
-#'      rows of \code{swap}.
-#' @return A \code{list} with vectors of length \code{r} with coefficients 
-#'      in \eqn{\{-1,1\}}. Empty \code{list} if no solution is found.
+#' @param r The numerical record to correct
+#' @param A1 Equality matrix
+#' @param C1 Constant vector for equalities
+#' @param eps Tolerance for equality-checking
+#' @param A2 Inequality matrix
+#' @param C2 Constant vector for inequalities
+#' @param epsvec Vector to check against. (\code{.Machine.double.eps} for \code{>} inequalities, otherwise 0.)
+#' @param flip indices in \code{r}, where r may be sign-flipped
+#' @param swap \eqn{n\times2} matrix with indices in \code{r}, each row indicating a possible value swap.
+#' @param w weight vector of \code{length(flips)+nrow(swaps)} if \code{swapIsOneFlip==TRUE}, otherwise of \code{length(r)}
+#' @param swapIsOneFlip logical. If \code{TRUE}, weights are assigned to each flip or swap action. If \code{FALSE} weights are assigned to every changed variable. 
+#' @param maxActions Maximum number of \code{flips+swaps} to try.
+#' @param maxCombinations the maximum number of flip/swap combinations to try. See the description in \code{\link{correctSigns}}
 #'
-flipAndSwap <- function(A, C, r, flip, swap, eps, w){
-    II <- rbind(cbind(flip,NA),swap)
-   
-    v <- rep(1,ncol(A))
-    if (all(abs(A%*%r - C) <= eps)) return(list(v))
+#' @return a list containing
+#'  \tabular{ll}{
+#'      \code{S} \tab \code{n x length(r)} array with corrected versions of \code{r} \cr
+#'      \code{weight} \tab vector of length \code{n} with total weight for each solution \cr
+#'      \code{nFlip} \tab number of sign flips for every solution \cr
+#'      \code{nSwap} \tab number of value swaps for every solution\cr
+#' }
+#'
+#' @seealso \code{\link{correctSigns}}
+#'
+#'
+getSignCorrection <- function( r, A1, C1, eps, A2, C2, epsvec, flip, swap, w, 
+    swapIsOneFlip, maxActions, maxCombinations ){
     
-    S <- list()
-    weights <- numeric(0)
-    j <- 1
-    for ( nsigns in 1:(nrow(II))){    
-        I <- combn(1:nrow(II), nsigns)
-        for ( i in 1:ncol(I) ){
-           s <- v
-           k <- as.integer(II[I[,i],])
-           k <- k[!is.na(k)]
-           s[k] <- -1
-           if ( all(abs(A %*% (r*s) - C) <= eps) ){
-                S[[j]] <- s
-                weights[j] <- sum(w[I[,j]])
-                j <- j+1
-           }
+    nflip <- length(flip)
+    ntot <- nflip + nrow(swap) 
+     
+    S <- array(dim=c(0,length(r)))
+    weight <- nFlip <- nSwap <- numeric(0)
+    i <- 0
+    for( nActions in 1:maxActions ){
+        if ( choose(ntot, nActions) > maxCombinations ) break 
+        I <- combn(ntot, nActions)
+        for ( k in 1:ncol(I) ){
+            flips <- flip[I[I[ ,k] <= nflip, k]]
+            swaps <- swap[I[I[ ,k] >  nflip, k]-nflip,,drop=FALSE]
+            s <- applyFix(flips, swaps, r)
+            if ( all(abs(A1 %*% s - C1) < eps) & all(abs(A2 %*% s - C2) >= epsvec) ){
+                i <- i + 1
+                S <- rbind(S,s)
+                if ( swapIsOneFlip ){
+                    weight[i] <- sum(w[I[,k]])
+                } else {
+                    iFlip <- I[I[ ,k] <= nflip, k] 
+                    iSwap <- I[I[ ,k] >  nflip, k]-nflip 
+                    weight[i] <- sum(w[flip[I[iFlip,k]]]) + sum(w[swap[I[iSwap,k]]])
+                }
+                nFlip[i] <- length(flips)
+                nSwap[i] <- nrow(swaps)
+            }
         }
-        if ( length(S) > 0 ) break
+        if (length(S) > 0) break
     }
-    return(list(signs=S, weights=weights))
+    return(list(S=S, weight=weight, nFlip=nFlip, nSwap=nSwap))
 }
 
-
-#' Correct records under linear restrictions using sign flips and variable swaps
+#' Correct sign errors and value interchanges in data records. It replaces \code{\link{old.correctSigns}}.
 #'
-#' This algorithm tries to repair records that violate linear equality constraints by
-#' switching signs or swapping variable values occuring in violated edits. Possible rounding errors
-#' can be taken into account. Specifically, it tries to solve
+#' This algorithm tries to correct records violating linear equalities by sign flipping and/or value interchanges.
+#' Linear inequalities are taken into account when judging possible solutions. If one or more inequality restriction
+#' is violated, the solution is rejected. It is important to note that the \code{\link{status}} of a record has
+#' the following meaning:
 #' 
-#' \eqn{(1)\quad \min_{s\in\{-1,1\}^n\backslash V}(\sum_{i=1}^n\delta_{s_i,-1}) \textrm{ under } |\sum_{i=1}^nE_{ji}x_is_i - b_j| \leq \varepsilon,\quad \forall j},
+#' \tabular{ll}{
+#' \code{valid} \tab The record obeys all equality constraints on entry. No error correction is performed. \cr
+#' \code{}      \tab It may therefore still contain inequality errors.\cr
+#' \code{corrected} \tab Equality errors were found, and all of them are solved without violating inequalities.\cr
+#' \code{partial}\tab Does not occur\cr
+#' \code{invalid} \tab The record contains equality violations which could not be solved with this algorithm\cr
+#' \code{NA} \tab record could not be checked. It contained missings.
+#' }
 #'
-#' where \eqn{\delta} is the Kronecker delta function (the sum counts the number of occurences where \eqn{s_i=1}). Furthermore, 
-#' \eqn{E} is an \code{editmatrix}, \eqn{x} is a the subset of a record of \code{dat} corresponding to
-#' columns in \code{E}, and \eqn{b}  a vecor of constants. \eqn{V} is the set of vectors in \eqn{\{-1,1\}^n} excluded from the 
-#' search space because they flip signs of variables not occuring in violated restrictions.
-#' 
-#' When a set \eqn{S} of equivalent solutions is found, the solution minimizing a certain
-#' weight will be chosen. Rounding errors which mask sign  errors in \eqn{x} can be circumvented by setting \eqn{\varepsilon} to 2 or more
-#' units of measure. 
-#'
-#' Note that when two elements of \eqn{x} have coefficients with opposite signs in one of the rows of \eqn{E},
-#' flipping the sign of both elements is equal to changing their order (\emph{i.e.} \eqn{a-b=-(b-a)}). We will
-#' call this a variable swap.
-#'
-#' The algorithm has two modes: one where a variable swap is counted as two sign flips (the default) and one where 
-#' a variable swap is counted as one sign flip. This can be set with the option  \code{swapIsOneFlip}. 
-#'
-#' If \code{swapIsOneFlip=FALSE}, the default, the algorithm tries to solve the minimization of Eqn. (1). When a set \eqn{S} of
-#' multiple solutions is found the solution satisfying
-#'
-#' \eqn{(2)\quad \min_{s\in S}\sum_{i=1}^n w_is_i\delta_{s_i,-1}}
-#'
-#' is chosen (\eqn{n} is the number of variables in the record). 
-#' If this still doesn't single out one solution, the first one encountered is used. If the user passes a list
-#' of variable pairs which may be interchanged (the \code{swap} argument), the solution will be checked for
-#' swaps and if so, the swaps are applied.
-#'
-#' When \code{swapIsOneFlip=TRUE}, a value interchange counts as one sign change. The algorithm still searches for
-#' the minimum of Eqn. (1). However, signs of swap-pairs are always changed simultaneously. Therefore the list of 
-#' variables who's signs may be changed (\code{flip} argument) must be disjunct from the list of variable pairs
-#' that may be swapped (\code{swap}). When more then one solution is found, the solution satisfying
-#'
-#' 
-#' \eqn{(3)\quad \min_{s\in S}\sum_{i\in {\tt flips}}^{m} w_i  +\sum_{i\in{\tt swaps}} w_i }
-#'
-#' is chosen. Here, \eqn{w} is a vector of length \code{length{flip}+length{swap}}. The case where 
-#' \code{swapIsOneFlip=TRUE}, is can be used in the the profit-loss account example
-#' in \cite{Scholtus (2008)}. 
+#' The algorithm applies all combinations of (user-allowed) flip- and swap combinations to find a solution, and minimizes 
+#' the number of actions (flips+swaps) that have to be taken to correct a record. When multiple solutions are found, the
+#' solution of minimal weight is chosen. The user may provide a weight vector with weights for every flip and every swap,
+#' or a named weight vector with a weight for every variable. If the weights do not single out a solution, the first one
+#' found is chosen.
 #'
 #'
 #'
+#' @title Correct sign errors and value interchanges in data records
 #'
-#' @title Correct records violating linear restrictions with sign flips and value swaps
-#'
-#'
-#' @param E An object of class \code{editmatrix}. It may contain equality as well as inequality constraints, 
-#'      but only the equality constraints will be used.
-#' @param dat The data to correct
-#' @param maxSigns Maximum number of signs that may be changed. Defaults to 
-#'      the number of variables that occur in violated edits if \code{swapIsOneFlip==FALSE}. Ignored otherwise.
-#' @param eps Tolerance on edit check. Defaults to \code{sqrt(.Machine.double.eps)}. Increase this to correct sign errors masked by rounding.
-#' @param flip Names of variables whos signs may be flipped. Defaults to \code{colnames(E)}, use \code{c()} to flip nothing.
-#' @param swap \code{list} of 2-vectors containing pairs of variable names who's values may 
-#'      be interchanged. Defaults to \code{NA}.
-#' @param swapIsOneFlip \code{logical}. Count a value interchange as 1 (TRUE) or 2 (default) sign changes. See details.
-#' @param weight Positive numeric vector of length \code{ncol(E)}. Variables with heigher 
-#'      reliability weight are less likely to be changed. Defaults to \code{rep(1,ncol(E))}
-#' @param fix character vector. Names of variables which may not be changed. Ignored when \code{swapIsOneFlip==TRUE}
-#'
-#' @return An object of class \code{\link[=deducorrect-object]{deducorrect}}, where the \code{\link{status}} slot contains the following.
+#' @param E An object of class \code{\link[editrules:editmatrix]{editmatrix}}
+#' @param dat \code{data.frame}, the records to correct.
+#' @param flip A \code{character} vector of variable names who's values may be sign-flipped
+#' @param swap A \code{list} of \code{character} 2-vectors of variable combinations who's values may be swapped
+#' @param maxActions The maximum number of flips and swaps that may be performed
+#' @param maxCombinations The number of possible flip/swap combinations in each step of the algorithm is \code{choose(n,k)}, with \code{n}
+#'      the number of \code{flips+swaps}, and \code{k} the number of actions taken in that step. If \code{choose(n,k)} exceeds \code{maxCombinations},
+#'      the algorithm returns a record uncorrected.
+#' @param eps Tolerance to check equalities against. Use this to account for sign errors masked by rounding errors.
+#' @param weight weight vector. Weights can be assigned either to actions (flips and swap) or to variables.
+#'      If \code{length(weight)==length(flip)+length(swap)}, weights are assiged to actions, if \code{length(weight)==ncol(E)}, weights
+#'      are assigned to variables. In the first case, the first \code{length{flip}} weights correspond to flips, the rest to swaps. 
+#'      A warning is issued in the second case when the weight vector is not named. See the examples for more details.
+#' @param fixate a \code{character} vector with names of variables whos values may not be changed
+#' @return a \code{\link{deducorrect-object}}. The \code{status} slot has the following columns for every records in \code{dat}.
 #'
 #'  \tabular{ll}{
 #'      \code{status}\tab a \code{\link{status}} factor, showing the status of the treated record.\cr
@@ -172,156 +135,111 @@ flipAndSwap <- function(A, C, r, flip, swap, eps, w){
 #' inconsistencies and rounding errors in business survey data. Technical
 #' Report 08015, Netherlands.
 #' @seealso \code{\link{deducorrect-object}}
-#'
 #' @export
 correctSigns <- function(
     E, 
     dat,
-    maxSigns = length(unique(c(flip,unlist(swap)))),
-    eps=sqrt(.Machine$double.eps),
     flip = colnames(E),
-    swap = NULL,
-    swapIsOneFlip = FALSE,
-    weight = NA,
-    fix = NA){
-    
-    # check that flip and swap are disjunct
-    if (swapIsOneFlip){
-        lapply(swap, function(sw){ 
-            if (any(flip %in% sw)) 
-                stop("Variables in flip and swap must be mutually exclusive")
-        })
-    }
-    
-    # remove flips and swaps containing fixed variables.
-    if (!identical(fix,NA)){
-        flip <- setdiff(flip, fix)
-        swap <- lapply(swap, function(sw){
-            if ( !any(sw %in% fix)) return(sw)
-        })
-    }
+    swap = list(),
+    maxActions = length(flip)+length(swap),
+    maxCombinations = 1e5,
+    eps=sqrt(.Machine$double.eps),
+    weight = rep(1,length(flip)+length(swap)),
+    fixate = NA){
 
-    # default weights if necessary
-    if (identical(weight,NA)){
-        if (swapIsOneFlip){
-            weight <- matrix(rep(1,length(flip) + length(swap)), nrow=1)
+    ops <- getOps(E)
+    if ( any(ops %in% c(">", ">=")) ) E <- editmatrix(editrules(E), normalize=TRUE)
+   
+    # fixation variables. 
+    if ( !is.na(fixate) ){
+        flip <- setdiff(flip,fixate)
+        if (length(swap)>0)
+            for ( i in 1:length(swap) ) if ( any(swap[[i]] %in% fixate) ) swap[[i]] <- NULL        
+   }
+    # determine if flipIsOneSwap=TRUE or not by length of *weight*
+    if (length(weight) == length(flip) + length(swap)){
+        swapIsOneFlip <- TRUE
+    } else if (length(weight) == length(colnames(E)) ){
+        swapIsOneFlip <- FALSE
+        if ( all(names(weight) %in% colnames(E)) & length(names(weight))==length(colnames(E) )){
+            weight <- weight[colnames(E)]
         } else {
-            weight <- matrix(rep(1,ncol(E)), nrow=1)
-            weight[!(colnames(E) %in% flip)] <- 0 
+            names(weight) <- colnames(E)
+            warning(paste("Weight vector has no names. Assuming same order as colnames(E)"))
+            
         }
-    # check valitity of weights
     } else {
-        if (swapIsOneFlip){
-            if (length(weight) != length(flip) + length(swap)){
-                cat("Problem with weigth vector:\n")
-                cat(paste(" flip variables (",length(flip),"): ",paste(flip,collapse=", "),"\n",sep=""))
-                cat(paste(" swaps          (",length(swap),"): ",paste(sapply(swap, paste,collapse="<->"),sep=", "),"\n",sep=""))
-                cat(paste(" weight vector  (",length(weight),"): ",paste(weight, collapse=" "),"\n",sep=""))
-                stop("Length of Weight vector not equal to number of flips + number of swaps")
-            } 
-        } else {
-            if (length(weight) != ncol(E)){
-                stop("Length of weight vecor must equal the number of columns in E")
-            }
-        }
+        stop("Length of weight vector does not correspond with number of actions or number of columns in editmatrix")
     }
+
+    # prepare matrices and constants
+    eq <- ops == "=="
+    A1 <- as.matrix(E)[eq, ,drop=FALSE]
+    C1 <- getC(E)[eq]
+    A2 <- as.matrix(E)[!eq, ,drop=FALSE]
+    C2 <- getC(E)[!eq]
+    epsvec <- ifelse(ops[!eq]=="<", -.Machine$double.eps, 0)
     
+    D <- as.matrix(dat[, colnames(E)])
+    # from flip and swap names to indices
+    flip <- sapply(flip, function(fl) which(colnames(E)==fl))
+    swap <- sapply(swap, function(sw) c(which(colnames(E)==sw[1]), which(colnames(E)==sw[2])))
+    swap <- array(t(swap), dim=c(length(swap)/2, 2))
+    status <- status(nrow(dat))
+    wgt <- degeneracy <- nflips <- nswaps <- numeric(nrow(dat))
+    corrections <- data.frame(row=numeric(),variable=factor(levels=colnames(E)),old=numeric(),new=numeric())
     
-    # convenient subvectors
-    if (swapIsOneFlip){
-        wflip <- if ( length(flip)>0 ) weight[1:length(flip)] else numeric(0)
-        wswap <- if ( length(swap)>0 ) weight[(length(flip)+1):length(weight)] else numeric(0)
-    }
-    # which variables may be changed?
-    notFixed <- rep(TRUE,ncol(E))
-    if ( !swapIsOneFlip  ){
-        notFixed <- colnames(E) %in% c(flip,unlist(swap))
-    }
-
-    # Prepare matrices for correctSigns ans flipAndSwap
-    cn <- colnames(E)
-    D <- as.matrix(dat[ ,cn])
-    equalities <- getOps(E) == "=="
-    A <- as.matrix(E)[equalities, , drop=FALSE]
-    C <- getC(E)[equalities]
-    # swap-names to swap-indices
-    haveSwaps <- FALSE
-    if (!identical(swap, NULL)){
-        iSwap <- lapply(swap, function(sw) which(colnames(D) %in% sw) )
-        haveSwaps <- TRUE
-    }
-        
-    if ( swapIsOneFlip & haveSwaps ){
-        flipable <- colnames(D) %in% flip
-        swapable <- t(sapply(iSwap, array))
-    }
-
-    # Flip signs and swaps variables if allowed. 
-    swappit <- function(sw){
-        if ( all(s[sw]==-1) || any(abs(r[sw]) < eps) & any(s[sw] == -1) ){
-            r[sw] <<- r[sw[2:1]]
-            s[sw] <<- 1
-            nswap[i] <<- nswap[i] + 1
-        }
-    }
-
-    # do the actual work
-    degeneracy <- integer(nrow(dat))
-    nflip <- nswap <- weights <- numeric(nrow(dat))
-    status <- status(nrow(D))
-    corrections <- data.frame(row=integer(0), var=factor(levels=colnames(D)), old=numeric(0), new=numeric(0))
     for ( i in which(complete.cases(D)) ){
-        r <- D[i,]
-        violated <- abs(A%*%r - C) > eps            
-        adapt <- notFixed & colSums(abs(E[violated, ,drop=FALSE])) > 0
-        if ( swapIsOneFlip ){
-            fl    <- which(adapt & flipable)
-            adapt <- which(adapt)
-            w1    <- wflip[which(flipable) %in% adapt]
-            iSw   <- which(swapable[,1] %in% adapt & swapable[,2] %in%  adapt)
-            w2    <- wswap[iSw]
-            S <- flipAndSwap(A, C, r, fl, swapable[iSw,], eps, c(w1,w2))
-        } else {
-            S <- getSignCorrection(A, C, r, adapt, maxSigns, eps, weight)
+        r <- D[i, ]
+        iViolated <- abs(A1 %*% r) > eps
+        if ( !any(iViolated) ){
+            status[i] <- "valid"
+            next
         }
-        if ( length(S$signs) > 0 ){ # solution found
-            s <- S$signs[[which.min(S$weights)]]
-            degeneracy[i] <- sum(S$weights==min(S$weights))
-            weights[i] <- min(S$weights)
-            adapted <- s == -1
-            if ( !any(adapted) ){
-                status[i] <- "valid"
-            } else {
-                oldrec <- r
-                if ( haveSwaps ) lapply(iSwap, swappit)
-                nflip[i] <- sum(adapted) - 2*nswap[i]
-                D[i, ] <- r*s
-                status[i] <- "corrected"
-                # TODO - this data.frame stuff can slow things down and should be speeded up.
-                corrections <- rbind(corrections,
-                    data.frame(
-                        row = rep(i,sum(adapted)),
-                        variable = colnames(D)[adapted],
-                        old = oldrec[adapted],
-                        new = D[i,adapted]))
-            }
-        } else { # no solution
+        adapt <- which(colSums(abs(A1[iViolated, ,drop=FALSE]))>0)
+        flipable <- flip[flip %in% adapt]
+        swapable <- array(dim=c(0,2))
+        apply(swap, 1, function(sw) if ( all(sw %in% adapt) ) swapable <<- rbind(swapable,sw) )
+        corr <- getSignCorrection(
+            r  = r, 
+            A1 = A1, 
+            C1 = C1, 
+            eps= eps, 
+            A2 = A2, 
+            C2 = C2, 
+            epsvec = epsvec, 
+            flip = flipable, 
+            swap = swapable, 
+            w = weight, 
+            swapIsOneFlip = swapIsOneFlip, 
+            maxActions = min(maxActions,length(flipable)+nrow(swapable)), 
+            maxCombinations = maxCombinations)
+        if ( nrow(corr$S) > 0 ){
+            iMin <- which.min(corr$weight)
+            D[i,] <- corr$S[iMin,]
+            status[i] <- "corrected"
+            wgt[i] <- min(corr$weight)
+            degeneracy[i] <- length(corr$weight)
+            nflips[i] <- corr$nFlip[iMin]
+            nswaps[i] <- corr$nSwap[iMin]
+            changed <- D[i,] != r
+            corrections <- rbind(corrections,
+                data.frame(
+                    row = rep(i,sum(changed)),
+                    variable = colnames(E)[changed],
+                    old = r[changed],
+                    new = D[i,changed,drop=TRUE]))
+        } else {
             status[i] <- "invalid"
         }
     }
-    dat[,cn] <- D
+    dat[,colnames(E)] <- D
     rownames(corrections) <- NULL
-    return(newdeducorrect(
-        corrected  = dat,
-        corrections=corrections,
-        status=data.frame(
-            status     = status, 
-            degeneracy = degeneracy,
-            weight     = weights,
-            nflip      = nflip,
-            nswap      = nswap)))
-        
+    return(newdeducorrect(corrected=dat,
+        status=data.frame(status=status,weight=wgt,degeneracy=degeneracy, nflip=nflips, nswap=nswaps),
+        corrections=corrections))
 }
+
 
 
 

@@ -1,21 +1,31 @@
 \name{getSignCorrection}
 \alias{getSignCorrection}
-\title{Try to solve balance edit violations by sign changes...}
-\usage{getSignCorrection(A, C, r, adapt, maxSigns, eps, w)
+\title{workhorse for correctSigns}
+\usage{getSignCorrection(r, A1, C1, eps, A2, C2, epsvec, flip, swap, w, swapIsOneFlip,
+    maxActions, maxCombinations)
 }
-\description{Try to solve balance edit violations by sign changes}
-\details{This is one of the workhorse functions for \code{\link{correctSigns}}, the other being \code{\link{flipAndSwap}}.
-It performs a breadth-first tree search to resolve (near) equality edit violations. The difference with \code{\link{flipAndSwap}}
-is that variable swaps are interpreted as two actions (two sign flips).
-The solution(s), if any, with as little as possible sign changes are returned.}
-\value{A \code{list} with vectors of length \code{r} with coefficients 
-in \eqn{\{-1,1\}}. Empty \code{list} if no solution is found.}
-\arguments{\item{A}{The \code{matrix} part of an \code{editmatrix}}
-\item{C}{The \code{CONSTANT} part of an \code{editmatrix}}
-\item{r}{A numerical record.}
-\item{adapt}{A logical vector of length \code{ncol(A)} indicating which variables may be changed.}
-\item{maxSigns}{how many signs may maximally be flipped?}
-\item{eps}{Tolerance for equality restriction checking}
-\item{w}{positive weight vector of \code{length(ncol(A))}}
+\description{Workhorse for correctSigns}
+\details{Warning. this function replaces the deprecated \code{\link{old.getSignCorrection}}}
+\value{a list containing
+\tabular{ll}{
+\code{S} \tab \code{n x length(r)} array with corrected versions of \code{r} \cr
+\code{weight} \tab vector of length \code{n} with total weight for each solution \cr
+\code{nFlip} \tab number of sign flips for every solution \cr
+\code{nSwap} \tab number of value swaps for every solution\cr
+}}
+\seealso{\code{\link{correctSigns}}}
+\arguments{\item{r}{The numerical record to correct}
+\item{A1}{Equality matrix}
+\item{C1}{Constant vector for equalities}
+\item{eps}{Tolerance for equality-checking}
+\item{A2}{Inequality matrix}
+\item{C2}{Constant vector for inequalities}
+\item{epsvec}{Vector to check against. (\code{.Machine.double.eps} for \code{>} inequalities, otherwise 0.)}
+\item{flip}{indices in \code{r}, where r may be sign-flipped}
+\item{swap}{\eqn{n\times2} matrix with indices in \code{r}, each row indicating a possible value swap.}
+\item{w}{weight vector of \code{length(flips)+nrow(swaps)} if \code{swapIsOneFlip==TRUE}, otherwise of \code{length(r)}}
+\item{swapIsOneFlip}{logical. If \code{TRUE}, weights are assigned to each flip or swap action. If \code{FALSE} weights are assigned to every changed variable.}
+\item{maxActions}{Maximum number of \code{flips+swaps} to try.}
+\item{maxCombinations}{the maximum number of flip/swap combinations to try. See the description in \code{\link{correctSigns}}}
 }
 

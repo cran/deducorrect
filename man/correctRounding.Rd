@@ -14,7 +14,7 @@ It checks if the suggested correction
 does not violate the inequality matrix \eqn{Q}. If it does, it will try to generate a different solution up till \code{K} times.}
 \references{Scholtus S (2008). Algorithms for correcting some obvious
 inconsistencies and rounding errors in business survey data. Technical
-Report 08015, Netherlands.}
+Report 08015, Statistics Netherlands.}
 \value{A \code{\link[=deducorrect-object]{deducorrrect}} object.}
 \seealso{\code{\link{deducorrect-object}} \code{\link{status}}}
 \arguments{\item{R}{editmatrix \eqn{Rx = a}}

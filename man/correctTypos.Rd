@@ -1,7 +1,8 @@
 \name{correctTypos}
 \alias{correctTypos}
 \title{Correct records under linear restrictions using typographical error suggestions...}
-\usage{correctTypos(E, dat, cost=c(1, 1, 1, 1), eps=sqrt(.Machine$double.eps), maxdist=1)
+\usage{correctTypos(E, dat, fixate, cost=c(1, 1, 1, 1), eps=sqrt(.Machine$double.eps),
+    maxdist=1)
 }
 \description{Correct records under linear restrictions using typographical error suggestions}
 \details{This algorithm tries to detect and repair records that violate linear equality constraints by correcting simple typo's as described in Scholtus (2009).
@@ -38,6 +39,7 @@ Levenshtein VI (1966). Binary codes capable of correcting deletions, insertions,
 and reversals. Soviet Physics Doklady 10: 707-10}
 \arguments{\item{E}{\code{\link{editmatrix}} that constrains \code{x}}
 \item{dat}{\code{data.frame} with data to be corrected.}
+\item{fixate}{\code{character} with variable names that should not be changed.}
 \item{cost}{for a deletion, insertion, substition or transposition.}
 \item{eps}{\code{numeric}, tolerance on edit check. Default value is \code{sqrt(.Machine$double.eps)}. Set to 2 
 to allow for rounding errors. Set this parameter to 0 for exact checking.}
