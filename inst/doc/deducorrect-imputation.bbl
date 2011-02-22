@@ -18,7 +18,7 @@ Bethlehem, J., F.~Cobben, and B.~Schouten (2011).
 \bibitem[\protect\citeauthoryear{{D}e Waal, Pannekoek, and Scholtus}{{D}e Waal
   et~al.}{2011}]{waal:2011}
 {D}e Waal, T., J.~Pannekoek, and S.~Scholtus (2011).
-\newblock {\em Handbook of statistical data editing}.
+\newblock {\em Handbook of statistical data editing and imputation}.
 \newblock Wiley handbooks in survey methodology. Hoboken, New Jersey: John
   Wiley \& {S}ons.
 
@@ -39,6 +39,14 @@ Kartika, W. (2001).
 \newblock Consistent imputation of categorical and numerical data.
 \newblock Technical report, Statistics {N}etherlands, Den Haag.
 
+\bibitem[\protect\citeauthoryear{Pannekoek}{Pannekoek}{2006}]{pannekoek:2006}
+Pannekoek, J. (2006).
+\newblock Regression imputation with linear equality constraints on the
+  variables.
+\newblock In {\em {UNECE} {W}ork session on statistical data editing in
+  {B}onn}.
+\newblock http://www.unece.org/stats/documents/2006.09.sde.html.
+
 \bibitem[\protect\citeauthoryear{Scholtus}{Scholtus}{2008}]{scholtus:2008}
 Scholtus, S. (2008).
 \newblock Algorithms for correcting some obvious inconsistencies and rounding
@@ -56,13 +64,19 @@ Scholtus, S. (2009).
   or via the website of Statistics Netherlands.
 
 \bibitem[\protect\citeauthoryear{{V}an~der Loo and de~Jonge}{{V}an~der Loo and
-  de~Jonge}{2011}]{loo:2011c}
-{V}an~der Loo, M. and E.~de~Jonge (2011).
+  de~Jonge}{2011a}]{loo:2011c}
+{V}an~der Loo, M. and E.~de~Jonge (2011a).
+\newblock Deductive correction with the deducorrect package.
+\newblock Technical Report 2011xx, Statistics {N}etherlands, Den Haag.
+\newblock In press.
+
+\bibitem[\protect\citeauthoryear{{V}an~der Loo and de~Jonge}{{V}an~der Loo and
+  de~Jonge}{2011b}]{loo:2011d}
+{V}an~der Loo, M. and E.~de~Jonge (2011b).
 \newblock Manipulation of categorical edits and error localization with the
   editrules package.
-\newblock Technical Report 2011XXXX, Statistics Netherlands, The
-  Hague{/}Heerlen.
-\newblock to be published.
+\newblock Technical Report 2011XX, Statistics Netherlands, The Hague{/}Heerlen.
+\newblock In press.
 
 \bibitem[\protect\citeauthoryear{{V}an~der Loo, de~Jonge, and
   Scholtus}{{V}an~der Loo et~al.}{2011}]{loo:2011a}

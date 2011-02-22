@@ -8,7 +8,7 @@ Author: Mark van der Loo, Edwin de Jonge, and Sander
     Scholtus
 Description: Deductive correction of simple rounding,
     typing and sign errors
-Version: 1.1-0
+Version: 1.1-1
 URL: http://code.google.com/p/deducorrect/
 Date: 2011-02-22
 Depends: editrules (>= 1.9-0)
@@ -16,6 +16,6 @@ Collate: 'correctRounding.R' 'correctSigns.R' 'correctTypos.R' 'pkg.R'
         'S3deducorrect.R' 'stringdistance.R' 'unimodularity.R' 'util.R'
         'deductiveLevels.R' 'deductiveZeros.R' 'deduImpute.R'
         'solSpace.R'
-Packaged: 2011-11-16 14:27:23 UTC; mark
+Packaged: 2011-11-25 10:08:49 UTC; mark
 Repository: CRAN
-Date/Publication: 2011-11-17 11:25:39
+Date/Publication: 2011-11-25 15:55:48
