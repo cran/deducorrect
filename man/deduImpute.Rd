@@ -2,9 +2,12 @@
 \alias{deduImpute}
 \alias{deduImpute.editarray}
 \alias{deduImpute.editmatrix}
+\alias{deduImpute.editset}
 \title{Deductive imputation of numerical or categorical values}
 \usage{
   deduImpute(E, dat, adapt = NULL, ...)
+
+  \method{deduImpute}{editset} (E, dat, adapt = NULL, ...)
 
   \method{deduImpute}{editarray} (E, dat, adapt = NULL,
     ...)
@@ -35,6 +38,12 @@
   Based on observed values and edit rules, impute as many
   variables deductively as possible.
 
+  If \code{E} is an \code{editset}, imputation based on
+  numerical rules (if any) is performed, and imputations
+  violating extra edits are reverted. Next, this procedure
+  is repeated for pure categorical rules. The results are
+  combined and returned in a \code{deducorrect} object.
+
   \bold{For categorical data:} The funcion
   \code{\link{deductiveLevels}} is used to derive deductive
   imputations for as many fields as possible
@@ -53,6 +62,13 @@
   error localization algorithm, such as
   \code{editrules::localizeErrors}, the feasibility check
   is also not nessecary.
+}
+\note{
+  When \code{adapt} is not \code{NULL}, values in
+  \code{dat} where \code{adapt==TRUE} are replaced with
+  \code{NA}. The output may therefore contain missings at
+  positions that were previously filled (with wrong values,
+  according to \code{adapt}).
 }
 \examples{
 
@@ -128,6 +144,25 @@ s$status
 s$corrections
 
 
+E <- editset(expression(
+    x + y == z,
+    x >= 0,
+    A \%in\% c('a','b'),
+    B \%in\% c('c','d'),
+    if ( A == 'a' ) B == 'b',
+    if ( B == 'b' ) x > 0
+))
+
+x <- data.frame(
+    x = NA,
+    y = 1,
+    z = 1,
+    A = 'a',
+    B = NA
+)
+# deduImpute will impute x=0 and B='b',which violates the 
+# last edit. Hence, imputation will be reverted.
+deduImpute(E,x) 
 
 
 }

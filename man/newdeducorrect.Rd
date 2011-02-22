@@ -3,7 +3,8 @@
 \alias{print.deducorrect}
 \title{Generate an S3 \code{deducorrect} object}
 \usage{
-  newdeducorrect(corrected, corrections, status)
+  newdeducorrect(corrected, corrections, status,
+    Call = sys.call(-1))
 }
 \arguments{
   \item{corrected}{The corrected data.frame}
@@ -14,6 +15,8 @@
 
   \item{status}{A \code{data.frame} with at least one
   \code{\link{status}} column.}
+
+  \item{Call}{Optionally, a \code{call} object.}
 }
 \value{
   an S3 object of class \code{deducorrect}

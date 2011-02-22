@@ -1,19 +1,28 @@
 \name{correctSigns}
 \alias{correctSigns}
+\alias{correctSigns.editmatrix}
+\alias{correctSigns.editset}
 \title{Correct sign errors and value interchanges in data records}
 \usage{
-  correctSigns(E, dat, flip = getVars(E), swap = list(),
+  correctSigns(E, dat, ...)
+
+  \method{correctSigns}{editset} (E, dat, ...)
+
+  \method{correctSigns}{editmatrix} (E, dat,
+    flip = getVars(E), swap = list(),
     maxActions = length(flip) + length(swap),
     maxCombinations = 1e+05,
     eps = sqrt(.Machine$double.eps),
     weight = rep(1, length(flip) + length(swap)),
-    fixate = NA)
+    fixate = NA, ...)
 }
 \arguments{
   \item{E}{An object of class
   \code{\link[editrules:editmatrix]{editmatrix}}}
 
   \item{dat}{\code{data.frame}, the records to correct.}
+
+  \item{...}{arguments to be passed to other methods.}
 
   \item{flip}{A \code{character} vector of variable names
   who's values may be sign-flipped}
@@ -103,7 +112,6 @@
 }
 \examples{
 
-require(editrules)
 # some data 
 dat <- data.frame(
     x = c( 3,14,15,  1, 17,12.3),
@@ -113,6 +121,7 @@ dat <- data.frame(
 E <- editmatrix(c("z == x-y"))
 
 # All signs may be flipped, no swaps.
+
 correctSigns(E, dat)
 
 # Allow for rounding errors
@@ -146,7 +155,29 @@ correctSigns(E,dat)
 # demand that solution has y>0, taking acount of roundings in equalities
 correctSigns(E,dat,eps=2)
 
+# example with editset
+E <- editset(expression(
+    x + y == z,
+    x >= 0,
+    y > 0,
+    y < 2,
+    z > 1,
+    z < 3,
+    A \%in\% c('a','b'),
+    B \%in\% c('c','d'),
+    if ( A == 'a' ) B == 'b',
+    if ( B == 'b' ) x < 1
+))
 
+x <- data.frame(
+    x = -1,
+    y = 1,
+    z = 2,
+    A = 'a',
+    B = 'b'
+)
+
+correctSigns(E,x)
 
 
 

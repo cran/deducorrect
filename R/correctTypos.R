@@ -27,8 +27,9 @@
 #' @example ../examples/correctTypos.R
 #' @seealso \code{\link{damerauLevenshteinDistance}}
 #'
-#' @param E \code{\link{editmatrix}} that constrains \code{x} 
+#' @param E \code{editmatrix} or \code{editset}
 #' @param dat \code{data.frame} with data to be corrected.
+#' @param ... arguments to be passed to other methods.
 #' @param fixate \code{character} with variable names that should not be changed.
 #' @param cost for a deletion, insertion, substition or transposition.
 #' @param eps \code{numeric}, tolerance on edit check. Default value is \code{sqrt(.Machine$double.eps)}. Set to 2 
@@ -47,12 +48,28 @@
 #'
 #' Levenshtein VI (1966). Binary codes capable of correcting deletions, insertions, 
 #' and reversals. Soviet Physics Doklady 10: 707-10
-correctTypos <- function( E
+correctTypos <- function(E, dat, ...){
+    UseMethod('correctTypos')
+}
+
+#' @method correctTypos editset
+#' @rdname correctTypos
+#' @export
+correctTypos.editset <- function(E, dat,...){
+    correctAndRevert(correctTypos.editmatrix, E, dat, ...)
+}
+
+
+#' @method correctTypos editmatrix
+#' @rdname correctTypos
+#' @export
+correctTypos.editmatrix <- function( E
                         , dat
                         , fixate = NULL
                         , cost = c(1,1,1,1)
                         , eps = sqrt(.Machine$double.eps)
                         , maxdist = 1
+                        , ...
                         ){
                         
    stopifnot(is.editmatrix(E), is.data.frame(dat))
@@ -146,7 +163,8 @@ correctTypos <- function( E
         newdeducorrect(
             status = data.frame(status=status),
             corrected = corrected,
-            corrections = cdf
+            corrections = cdf,
+            ...
         )
     )
 }

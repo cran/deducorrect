@@ -59,7 +59,7 @@ getSignCorrection <- function( r, A1, C1, eps, A2, C2, epsvec, flip, swap, w,
             flips <- flip[I[I[ ,k] <= nflip, k]]
             swaps <- swap[I[I[ ,k] >  nflip, k]-nflip,,drop=FALSE]
             s <- applyFix(flips, swaps, r)
-            if ( all(abs(A1 %*% s - C1) < eps) & all(A2 %*% s - C2 < epsvec) ){
+            if ( all(abs(A1 %*% s - C1) < eps) && all(A2 %*% s - C2 < epsvec) ){
                 i <- i + 1
                 S <- rbind(S,s)
                 if ( swapIsOneFlip ){
@@ -108,6 +108,7 @@ getSignCorrection <- function( r, A1, C1, eps, A2, C2, epsvec, flip, swap, w,
 #'
 #' @param E An object of class \code{\link[editrules:editmatrix]{editmatrix}}
 #' @param dat \code{data.frame}, the records to correct.
+#' @param ... arguments to be passed to other methods.
 #' @param flip A \code{character} vector of variable names who's values may be sign-flipped
 #' @param swap A \code{list} of \code{character} 2-vectors of variable combinations who's values may be swapped
 #' @param maxActions The maximum number of flips and swaps that may be performed
@@ -136,7 +137,23 @@ getSignCorrection <- function( r, A1, C1, eps, A2, C2, epsvec, flip, swap, w,
 #' Report 08015, Netherlands.
 #' @seealso \code{\link{deducorrect-object}}
 #' @export
-correctSigns <- function(
+correctSigns <- function(E,dat, ...){
+    UseMethod("correctSigns")
+}
+
+#'
+#' @method correctSigns editset
+#' @rdname correctSigns
+#' @export
+correctSigns.editset <- function(E, dat, ...){
+    correctAndRevert(correctSigns.editmatrix, E, dat, ...)
+}   
+
+
+#' @method correctSigns editmatrix
+#' @rdname correctSigns
+#' @export
+correctSigns.editmatrix <- function(
     E, 
     dat,
     flip = getVars(E),
@@ -145,7 +162,8 @@ correctSigns <- function(
     maxCombinations = 1e5,
     eps=sqrt(.Machine$double.eps),
     weight = rep(1,length(flip)+length(swap)),
-    fixate = NA){
+    fixate = NA,
+    ...){
 
     ops <- getOps(E)
     if ( !isNormalized(E) ) E <- normalize(E)
@@ -246,7 +264,15 @@ correctSigns <- function(
     }
     dat[,vars] <- D
     rownames(corrections) <- NULL
-    return(newdeducorrect(corrected=dat,
-        status=data.frame(status=status,weight=wgt,degeneracy=degeneracy, nflip=nflips, nswap=nswaps),
-        corrections=corrections))
+    return(newdeducorrect(
+        corrected   = dat,
+        status      = data.frame(
+            status  = status,
+            weight  = wgt,
+            degeneracy = degeneracy, 
+            nflip = nflips, 
+            nswap=nswaps),
+            corrections = corrections,
+            ...
+    ))
 }

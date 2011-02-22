@@ -1,15 +1,23 @@
 \name{correctTypos}
 \alias{correctTypos}
+\alias{correctTypos.editmatrix}
+\alias{correctTypos.editset}
 \title{Correct records under linear restrictions using typographical error suggestions}
 \usage{
-  correctTypos(E, dat, fixate = NULL, cost = c(1, 1, 1, 1),
-    eps = sqrt(.Machine$double.eps), maxdist = 1)
+  correctTypos(E, dat, ...)
+
+  \method{correctTypos}{editset} (E, dat, ...)
+
+  \method{correctTypos}{editmatrix} (E, dat, fixate = NULL,
+    cost = c(1, 1, 1, 1), eps = sqrt(.Machine$double.eps),
+    maxdist = 1, ...)
 }
 \arguments{
-  \item{E}{\code{\link{editmatrix}} that constrains
-  \code{x}}
+  \item{E}{\code{editmatrix} or \code{editset}}
 
   \item{dat}{\code{data.frame} with data to be corrected.}
+
+  \item{...}{arguments to be passed to other methods.}
 
   \item{fixate}{\code{character} with variable names that
   should not be changed.}
@@ -101,6 +109,34 @@ dat <- read.csv(txt<-textConnection(
 ))
 close(txt)
 (cor <- correctTypos(E,dat))
+
+
+
+# example with editset
+E <- editset(expression(
+    x + y == z,
+    x >= 0,
+    y > 0,
+    y < 2,
+    z > 1,
+    z < 3,
+    A \%in\% c('a','b'),
+    B \%in\% c('c','d'),
+    if ( A == 'a' ) B == 'b',
+    if ( B == 'b' ) x > 3
+))
+
+x <- data.frame(
+    x = 10,
+    y = 1,
+    z = 2,
+    A = 'a',
+    B = 'b'
+)
+
+correctTypos(E,x)
+
+
 }
 \references{
   Scholtus S (2009). Automatic correction of simple typing
