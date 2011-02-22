@@ -1,0 +1,5 @@
+export(correctRounding)
+export(correctSigns)
+export(correctTypos)
+export(print.deducorrect)
+export(isTotallyUnimodular)
