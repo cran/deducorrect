@@ -1,6 +1,6 @@
 #' Calculate the Damerau Levenshtein Distance between two strings
 #'
-#' The Damerau Levenshtein Distance between two strings is commonly used for checking typographical errors in strings.
+#' The restricted Damerau Levenshtein Distance between two strings is commonly used for checking typographical errors in strings.
 #' It takes the deletion and insertion of a character, a wrong character (substition) or the swapping (transposition) 
 #' of two characters into account. By default these operations each account for distance 1.
 #'
@@ -18,9 +18,10 @@
 #' @param sb character vector of equal \code{length(sa)}
 #' @param w integer vector for cost of deletion, insertion, substitution 
 #' and transposition.
-#'
-#' @return integer vector with all edit distances
+#' 
+#' @return integer vector with pairwise edit distances
 damerauLevenshteinDistance <- function(sa,sb, w=c(1,1,1,1)){
+   if (length(sa) != length(sb)) stop('sa and sb must be of equal length')
    mapply(function(a,b){      
       a <- c("",a)
       b <- c("",b)

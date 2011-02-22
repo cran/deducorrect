@@ -13,15 +13,15 @@
   substitution and transposition.}
 }
 \value{
-  integer vector with all edit distances
+  integer vector with pairwise edit distances
 }
 \description{
-  The Damerau Levenshtein Distance between two strings is
-  commonly used for checking typographical errors in
-  strings. It takes the deletion and insertion of a
-  character, a wrong character (substition) or the swapping
-  (transposition) of two characters into account. By
-  default these operations each account for distance 1.
+  The restricted Damerau Levenshtein Distance between two
+  strings is commonly used for checking typographical
+  errors in strings. It takes the deletion and insertion of
+  a character, a wrong character (substition) or the
+  swapping (transposition) of two characters into account.
+  By default these operations each account for distance 1.
 }
 \references{
   Damerau F (1964). A technique for computer detection and

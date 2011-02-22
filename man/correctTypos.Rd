@@ -44,10 +44,10 @@
   violate linear equality constraints by correcting simple
   typo's as described in Scholtus (2009). The implemention
   of the detection of typing errors differs in that it uses
-  the Damerau-Levensthein distance. Furthermore it solves a
-  broader class of problems: the original paper describes
-  the class of equalities: \eqn{Ex=0} (balance edits) and
-  this implementation allows for \eqn{Ex=a}.
+  the restricted Damerau-Levensthein distance. Furthermore
+  it solves a broader class of problems: the original paper
+  describes the class of equalities: \eqn{Ex=0} (balance
+  edits) and this implementation allows for \eqn{Ex=a}.
 }
 \details{
   For each row in \code{dat} the correction algorithm first
@@ -150,6 +150,10 @@ correctTypos(E,x)
   Levenshtein VI (1966). Binary codes capable of correcting
   deletions, insertions, and reversals. Soviet Physics
   Doklady 10: 707-10
+
+  A good description of the restricted DL-distance can be
+  found on wikipedia:
+  http://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
 }
 \seealso{
   \code{\link{damerauLevenshteinDistance}}
