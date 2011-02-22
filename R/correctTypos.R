@@ -108,6 +108,7 @@ correctTypos <- function( E
       #m[i, cor[,"var"]]  <- cor[,"new"]
       x[cor[,1]] <- cor[,3]
       #TODO if any violatedEdits then solution is always partial
+#     print(violatedEdits(F,x) )
       if (all(which(violatedEdits(F, x)) %in% which(violatedEdits(F,m[i,])))){
          m[i,] <- x
       }
@@ -153,7 +154,7 @@ correctTypos <- function( E
 #' Check record validity and suggest typo corrections
 #'
 #' This function is the working horse for \code{\link{correctTypos}}
-#' @nord
+#' @keywords internal
 #' @param E editmatrix
 #' @param x numerical record to be checked
 #' @param eps tolerance for an edit to be valid
@@ -248,7 +249,7 @@ getTypoCorrection <- function( E, x, fixate=FALSE, eps=sqrt(.Machine$double.eps)
 }
 
 #' Solve an optimization problem using a tree algorithm as described in Scholtus (2009)
-#' @nord
+#' @keywords internal
 #' @param B binary matrix with suggested corrections per violated edit
 #' @param kappa frequency of suggested corrections
 #' @param delta \code{logical} vector with partial solution (starts with NA)

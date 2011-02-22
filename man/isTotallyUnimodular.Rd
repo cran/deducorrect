@@ -1,28 +1,31 @@
 \name{isTotallyUnimodular}
 \alias{isTotallyUnimodular}
 \title{Test for total unimodularity of a matrix.}
-\usage{isTotallyUnimodular(A)
+\usage{
+  isTotallyUnimodular(A)
 }
-\description{Check wether a matrix is totally unimodular.}
-\details{A matrix for which the determinant of every square submatrix equals \eqn{-1}, \eqn{0} or \eqn{1}
-is called \emph{totally unimodular}. This function tests if a matrix with 
-coefficients in \eqn{\{-1,0,1\}} is totally unimodular. It tries to reduce the matrix
-using the reduction method described in Scholtus (2008). Next, a test based
-on Heller and Tompkins (1956) or Raghavachari is performed.}
-\value{logical}
-\references{Heller I and Tompkins CB (1956). An extension of a theorem of Danttzig's In kuhn HW and Tucker AW (eds.),
-pp. 247-254. Princeton University Press.
-
-Raghavachari M (1976). A constructive method to recognize the total
-unimodularity of a matrix. _Zeitschrift fur operations research_,
-*20*, pp. 59-61.
-
-Scholtus S (2008). Algorithms for correcting some obvious
-inconsistencies and rounding errors in business survey data. Technical
-Report 08015, Netherlands.}
-\arguments{\item{A}{An object of class \code{\link{matrix}}.}
+\arguments{
+  \item{A}{An object of class \code{\link{matrix}}.}
 }
-\examples{# Totally unimodular matrix, reduces to nothing
+\value{
+  logical
+}
+\description{
+  Check wether a matrix is totally unimodular.
+}
+\details{
+  A matrix for which the determinant of every square
+  submatrix equals \eqn{-1}, \eqn{0} or \eqn{1} is called
+  \emph{totally unimodular}. This function tests if a
+  matrix with coefficients in \eqn{\{-1,0,1\}} is totally
+  unimodular. It tries to reduce the matrix using the
+  reduction method described in Scholtus (2008). Next, a
+  test based on Heller and Tompkins (1956) or Raghavachari
+  is performed.
+}
+\examples{
+
+# Totally unimodular matrix, reduces to nothing
 A <- matrix(c(
  1,1,0,0,0,
  -1,0,0,1,0,
@@ -43,5 +46,23 @@ A <- matrix(c(
     1,1,1,
     1,1,0,
     1,0,1))
-isTotallyUnimodular(A)}
+isTotallyUnimodular(A)
+
+
+
+
+}
+\references{
+  Heller I and Tompkins CB (1956). An extension of a
+  theorem of Danttzig's In kuhn HW and Tucker AW (eds.),
+  pp. 247-254. Princeton University Press.
+
+  Raghavachari M (1976). A constructive method to recognize
+  the total unimodularity of a matrix. _Zeitschrift fur
+  operations research_, *20*, pp. 59-61.
+
+  Scholtus S (2008). Algorithms for correcting some obvious
+  inconsistencies and rounding errors in business survey
+  data. Technical Report 08015, Netherlands.
+}
 

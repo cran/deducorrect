@@ -1,0 +1,75 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Bethlehem, Cobben, and Schouten}{Bethlehem
+  et~al.}{2011}]{bethlehem:2011}
+Bethlehem, J., F.~Cobben, and B.~Schouten (2011).
+\newblock {\em Handbook of Nonresponse in Household Surveys}, Volume 562 of
+  {\em Wiley handbooks in survey methodology}.
+\newblock John Wiley \& {S}ons.
+
+\bibitem[\protect\citeauthoryear{{D}e Jonge and {V}an~der Loo}{{D}e Jonge and
+  {V}an~der Loo}{2011}]{jonge:2011a}
+{D}e Jonge, E. and M.~{V}an~der Loo (2011).
+\newblock Manipulation of linear edits and error localization with the
+  editrules package.
+\newblock Technical Report 2011020, Statistics Netherlands, The
+  Hague{/}Heerlen.
+
+\bibitem[\protect\citeauthoryear{{D}e Waal, Pannekoek, and Scholtus}{{D}e Waal
+  et~al.}{2011}]{waal:2011}
+{D}e Waal, T., J.~Pannekoek, and S.~Scholtus (2011).
+\newblock {\em Handbook of statistical data editing}.
+\newblock Wiley handbooks in survey methodology. Hoboken, New Jersey: John
+  Wiley \& {S}ons.
+
+\bibitem[\protect\citeauthoryear{Greville}{Greville}{1959}]{greville:1959}
+Greville, T. N.~E. (1959).
+\newblock The pseudoinverse of a rectangular or singular matrix and its
+  application to the solution of systems of linear equations.
+\newblock {\em {SIAM} Review\/}~{\em 1}, 38--43.
+
+\bibitem[\protect\citeauthoryear{Kalton and Kasprzyk}{Kalton and
+  Kasprzyk}{1986}]{kalton:1986}
+Kalton, G. and D.~Kasprzyk (1986).
+\newblock The treatment of missing survey data.
+\newblock {\em Survey methodology\/}~{\em 12}, 1--16.
+
+\bibitem[\protect\citeauthoryear{Kartika}{Kartika}{2001}]{kartika:2001}
+Kartika, W. (2001).
+\newblock Consistent imputation of categorical and numerical data.
+\newblock Technical report, Statistics {N}etherlands, Den Haag.
+
+\bibitem[\protect\citeauthoryear{Scholtus}{Scholtus}{2008}]{scholtus:2008}
+Scholtus, S. (2008).
+\newblock Algorithms for correcting some obvious inconsistencies and rounding
+  errors in business survey data.
+\newblock Technical Report 08015, Statistics {N}etherlands, Den Haag.
+\newblock The papers are available in the inst/doc directory of the R package
+  or via the website of Statistics Netherlands.
+
+\bibitem[\protect\citeauthoryear{Scholtus}{Scholtus}{2009}]{scholtus:2009}
+Scholtus, S. (2009).
+\newblock Automatic correction of simple typing error in numerical data with
+  balance edits.
+\newblock Technical Report 09046, Statistics {N}etherlands, Den Haag.
+\newblock The papers are available in the inst/doc directory of the R package
+  or via the website of Statistics Netherlands.
+
+\bibitem[\protect\citeauthoryear{{V}an~der Loo and de~Jonge}{{V}an~der Loo and
+  de~Jonge}{2011}]{loo:2011c}
+{V}an~der Loo, M. and E.~de~Jonge (2011).
+\newblock Manipulation of categorical edits and error localization with the
+  editrules package.
+\newblock Technical Report 2011XXXX, Statistics Netherlands, The
+  Hague{/}Heerlen.
+\newblock to be published.
+
+\bibitem[\protect\citeauthoryear{{V}an~der Loo, de~Jonge, and
+  Scholtus}{{V}an~der Loo et~al.}{2011}]{loo:2011a}
+{V}an~der Loo, M., E.~de~Jonge, and S.~Scholtus (2011).
+\newblock Correction of rounding, typing and sign errors with the {\tt
+  deducorrect} package.
+\newblock Technical Report 201119, Statistics {N}etherlands, Den Haag.
+\newblock This paper is included with the package.
+
+\end{thebibliography}

@@ -1,20 +1,23 @@
+\docType{package}
 \name{deducorrect-package}
 \alias{deducorrect-package}
-\alias{deducorrect-package}
-\title{Deductive correction methods for sign, rounding and typing errors...}
-\description{Deductive correction methods for sign, rounding and typing errors}
-\details{Deductive correction methods for sign, rounding and typing errors
-It also contains functionality to check if a matrix of linear restrictions is
-totally unimodular. See also
+\title{Deductive correction methods for sign, rounding and typing errors}
+\description{
+  Deductive correction methods for sign, rounding and
+  typing errors It also contains functionality to check if
+  a matrix of linear restrictions is totally unimodular.
+  See also
+}
+\details{
+  \itemize{ \item{\code{\link{correctRounding}}}
+  \item{\code{\link{correctTypos}}}
+  \item{\code{\link{deducorrect-object}} and
+  \code{\link{status}} for output specification}
+  \item{\code{\link{isTotallyUnimodular}}} }
+}
+\examples{
 
-\itemize{
-\item{\code{\link{correctRounding}}}
-\item{\code{\link{correctTypos}}}
-\item{\code{\link{deducorrect-object}} and \code{\link{status}} for output specification}
-\item{\code{\link{isTotallyUnimodular}}}
-}}
-\docType{package}
-\examples{require(editrules)
+require(editrules)
 
 # some data 
 dat <- data.frame(
@@ -32,5 +35,6 @@ E <- editmatrix("z == x-y")
 
 correctTypos(E, dat)
 
-correctRounding(E, dat)}
+correctRounding(E, dat)
+}
 

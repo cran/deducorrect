@@ -1,23 +1,37 @@
 \name{damerauLevenshteinDistance}
 \alias{damerauLevenshteinDistance}
-\title{Calculate the Damerau Levenshtein Distance between two strings...}
-\usage{damerauLevenshteinDistance(sa, sb, w=c(1, 1, 1, 1))
+\title{Calculate the Damerau Levenshtein Distance between two strings}
+\usage{
+  damerauLevenshteinDistance(sa, sb, w = c(1, 1, 1, 1))
 }
-\description{Calculate the Damerau Levenshtein Distance between two strings}
-\details{The Damerau Levenshtein Distance between two strings is commonly used for checking typographical errors in strings.
-It takes the deletion and insertion of a character, a wrong character (substition) or the swapping (transposition) 
-of two characters into account. By default these operations each account for distance 1.}
-\references{Damerau F (1964). A technique for computer detection and correction of
-spelling errors. Communications of the ACM, 7,issue 3
+\arguments{
+  \item{sa}{character vector}
 
-Levenshtein VI (1966). Binary codes capable of correcting deletions, insertions, 
-and reversals. Soviet Physics Doklady 10: 707-10
-Damerau Levenshtein Distance calculates the difference between two strings
-used for typographical errors (typo's)}
-\value{integer vector with all edit distances}
-\arguments{\item{sa}{character vector}
-\item{sb}{character vector of equal \code{length(sa)}}
-\item{w}{integer vector for cost of deletion, insertion, substitution 
-and transposition.}
+  \item{sb}{character vector of equal \code{length(sa)}}
+
+  \item{w}{integer vector for cost of deletion, insertion,
+  substitution and transposition.}
+}
+\value{
+  integer vector with all edit distances
+}
+\description{
+  The Damerau Levenshtein Distance between two strings is
+  commonly used for checking typographical errors in
+  strings. It takes the deletion and insertion of a
+  character, a wrong character (substition) or the swapping
+  (transposition) of two characters into account. By
+  default these operations each account for distance 1.
+}
+\references{
+  Damerau F (1964). A technique for computer detection and
+  correction of spelling errors. Communications of the ACM,
+  7,issue 3
+
+  Levenshtein VI (1966). Binary codes capable of correcting
+  deletions, insertions, and reversals. Soviet Physics
+  Doklady 10: 707-10 Damerau Levenshtein Distance
+  calculates the difference between two strings used for
+  typographical errors (typo's)
 }
 

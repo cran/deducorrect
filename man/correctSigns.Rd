@@ -1,61 +1,107 @@
 \name{correctSigns}
 \alias{correctSigns}
 \title{Correct sign errors and value interchanges in data records}
-\usage{correctSigns(E, dat, flip=getVars(E), swap=list(), maxActions=length(flip) +
-    length(swap), maxCombinations=1e+05, eps=sqrt(.Machine$double.eps),
-    weight=rep(1, length(flip) + length(swap)), fixate=NA)
+\usage{
+  correctSigns(E, dat, flip = getVars(E), swap = list(),
+  maxActions = length(flip) + length(swap), maxCombinations
+  = 1e+05, eps = sqrt(.Machine$double.eps), weight = rep(1,
+  length(flip) + length(swap)), fixate = NA)
 }
-\description{Correct sign errors and value interchanges in data records.}
-\details{This algorithm tries to correct records violating linear equalities by sign flipping and/or value interchanges.
-Linear inequalities are taken into account when judging possible solutions. If one or more inequality restriction
-is violated, the solution is rejected. It is important to note that the \code{\link{status}} of a record has
-the following meaning:
+\arguments{
+  \item{E}{An object of class
+  \code{\link[editrules:editmatrix]{editmatrix}}}
 
-\tabular{ll}{
-\code{valid} \tab The record obeys all equality constraints on entry. No error correction is performed. \cr
-\code{}      \tab It may therefore still contain inequality errors.\cr
-\code{corrected} \tab Equality errors were found, and all of them are solved without violating inequalities.\cr
-\code{partial}\tab Does not occur\cr
-\code{invalid} \tab The record contains equality violations which could not be solved with this algorithm\cr
-\code{NA} \tab record could not be checked. It contained missings.
+  \item{dat}{\code{data.frame}, the records to correct.}
+
+  \item{flip}{A \code{character} vector of variable names
+  who's values may be sign-flipped}
+
+  \item{swap}{A \code{list} of \code{character} 2-vectors
+  of variable combinations who's values may be swapped}
+
+  \item{maxActions}{The maximum number of flips and swaps
+  that may be performed}
+
+  \item{maxCombinations}{The number of possible flip/swap
+  combinations in each step of the algorithm is
+  \code{choose(n,k)}, with \code{n} the number of
+  \code{flips+swaps}, and \code{k} the number of actions
+  taken in that step. If \code{choose(n,k)} exceeds
+  \code{maxCombinations}, the algorithm returns a record
+  uncorrected.}
+
+  \item{eps}{Tolerance to check equalities against. Use
+  this to account for sign errors masked by rounding
+  errors.}
+
+  \item{weight}{weight vector. Weights can be assigned
+  either to actions (flips and swap) or to variables. If
+  \code{length(weight)==length(flip)+length(swap)}, weights
+  are assiged to actions, if
+  \code{length(weight)==ncol(E)}, weights are assigned to
+  variables. In the first case, the first
+  \code{length{flip}} weights correspond to flips, the rest
+  to swaps. A warning is issued in the second case when the
+  weight vector is not named. See the examples for more
+  details.}
+
+  \item{fixate}{a \code{character} vector with names of
+  variables whos values may not be changed}
 }
+\value{
+  a \code{\link{deducorrect-object}}. The \code{status}
+  slot has the following columns for every records in
+  \code{dat}.
 
-The algorithm applies all combinations of (user-allowed) flip- and swap combinations to find a solution, and minimizes 
-the number of actions (flips+swaps) that have to be taken to correct a record. When multiple solutions are found, the
-solution of minimal weight is chosen. The user may provide a weight vector with weights for every flip and every swap,
-or a named weight vector with a weight for every variable. If the weights do not single out a solution, the first one
-found is chosen.
-
-If arguments \code{flip} or \code{swap} contain a variable not in \code{E}, these variables will be ignored by the algorithm.}
-\value{a \code{\link{deducorrect-object}}. The \code{status} slot has the following columns for every records in \code{dat}.
-
-\tabular{ll}{
-\code{status}\tab a \code{\link{status}} factor, showing the status of the treated record.\cr
-\code{degeneracy}\tab the number of solutions found, \emph{after} applying the weight\cr
-\code{weight}\tab the weight of the chosen solution\cr
-\code{nflip}\tab the number of applied sign flips\cr
-\code{nswap}\tab the number of applied value interchanges\cr
-}}
-\references{Scholtus S (2008). Algorithms for correcting some obvious
-inconsistencies and rounding errors in business survey data. Technical
-Report 08015, Netherlands.}
-\seealso{\code{\link{deducorrect-object}}}
-\arguments{\item{E}{An object of class \code{\link[editrules:editmatrix]{editmatrix}}}
-\item{dat}{\code{data.frame}, the records to correct.}
-\item{flip}{A \code{character} vector of variable names who's values may be sign-flipped}
-\item{swap}{A \code{list} of \code{character} 2-vectors of variable combinations who's values may be swapped}
-\item{maxActions}{The maximum number of flips and swaps that may be performed}
-\item{maxCombinations}{The number of possible flip/swap combinations in each step of the algorithm is \code{choose(n,k)}, with \code{n}
-the number of \code{flips+swaps}, and \code{k} the number of actions taken in that step. If \code{choose(n,k)} exceeds \code{maxCombinations},
-the algorithm returns a record uncorrected.}
-\item{eps}{Tolerance to check equalities against. Use this to account for sign errors masked by rounding errors.}
-\item{weight}{weight vector. Weights can be assigned either to actions (flips and swap) or to variables.
-If \code{length(weight)==length(flip)+length(swap)}, weights are assiged to actions, if \code{length(weight)==ncol(E)}, weights
-are assigned to variables. In the first case, the first \code{length{flip}} weights correspond to flips, the rest to swaps. 
-A warning is issued in the second case when the weight vector is not named. See the examples for more details.}
-\item{fixate}{a \code{character} vector with names of variables whos values may not be changed}
+  \tabular{ll}{ \code{status}\tab a \code{\link{status}}
+  factor, showing the status of the treated record.\cr
+  \code{degeneracy}\tab the number of solutions found,
+  \emph{after} applying the weight\cr \code{weight}\tab the
+  weight of the chosen solution\cr \code{nflip}\tab the
+  number of applied sign flips\cr \code{nswap}\tab the
+  number of applied value interchanges\cr }
 }
-\examples{require(editrules)
+\description{
+  Correct sign errors and value interchanges in data
+  records.
+}
+\details{
+  This algorithm tries to correct records violating linear
+  equalities by sign flipping and/or value interchanges.
+  Linear inequalities are taken into account when judging
+  possible solutions. If one or more inequality restriction
+  is violated, the solution is rejected. It is important to
+  note that the \code{\link{status}} of a record has the
+  following meaning:
+
+  \tabular{ll}{ \code{valid} \tab The record obeys all
+  equality constraints on entry. No error correction is
+  performed. \cr \code{} \tab It may therefore still
+  contain inequality errors.\cr \code{corrected} \tab
+  Equality errors were found, and all of them are solved
+  without violating inequalities.\cr \code{partial}\tab
+  Does not occur\cr \code{invalid} \tab The record contains
+  equality violations which could not be solved with this
+  algorithm\cr \code{NA} \tab record could not be checked.
+  It contained missings. }
+
+  The algorithm applies all combinations of (user-allowed)
+  flip- and swap combinations to find a solution, and
+  minimizes the number of actions (flips+swaps) that have
+  to be taken to correct a record. When multiple solutions
+  are found, the solution of minimal weight is chosen. The
+  user may provide a weight vector with weights for every
+  flip and every swap, or a named weight vector with a
+  weight for every variable. If the weights do not single
+  out a solution, the first one found is chosen.
+
+  If arguments \code{flip} or \code{swap} contain a
+  variable not in \code{E}, these variables will be ignored
+  by the algorithm.
+}
+\examples{
+
+require(editrules)
 # some data 
 dat <- data.frame(
     x = c( 3,14,15,  1, 17,12.3),
@@ -96,5 +142,21 @@ E <- editmatrix(c("z==x-y", "y>0"))
 correctSigns(E,dat)
 
 # demand that solution has y>0, taking acount of roundings in equalities
-correctSigns(E,dat,eps=2)}
+correctSigns(E,dat,eps=2)
+
+
+
+
+
+   
+   
+}
+\references{
+  Scholtus S (2008). Algorithms for correcting some obvious
+  inconsistencies and rounding errors in business survey
+  data. Technical Report 08015, Netherlands.
+}
+\seealso{
+  \code{\link{deducorrect-object}}
+}
 

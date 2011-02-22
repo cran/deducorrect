@@ -1,0 +1,27 @@
+\name{tree}
+\alias{tree}
+\title{Solve an optimization problem using a tree algorithm as described in Scholtus (2009)}
+\usage{
+  tree(B, kappa, delta = as.logical(rep(NA, ncol(B))), sol
+  = NULL)
+}
+\arguments{
+  \item{B}{binary matrix with suggested corrections per
+  violated edit}
+
+  \item{kappa}{frequency of suggested corrections}
+
+  \item{delta}{\code{logical} vector with partial solution
+  (starts with NA)}
+
+  \item{sol}{current best solution. (starts with null)}
+}
+\value{
+  sol
+}
+\description{
+  Solve an optimization problem using a tree algorithm as
+  described in Scholtus (2009)
+}
+\keyword{internal}
+

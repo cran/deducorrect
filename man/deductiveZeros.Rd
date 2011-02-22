@@ -1,0 +1,102 @@
+\name{deductiveZeros}
+\alias{deductiveZeros}
+\alias{deductiveZeros.editmatrix}
+\alias{deductiveZeros.matrix}
+\title{Find out which variables can deductively be imputed with 0}
+\usage{
+  deductiveZeros(E, x, ...)
+
+  \method{deductiveZeros}{editmatrix} (E, x, ...)
+
+  \method{deductiveZeros}{matrix} (E, x, b, adapt =
+  logical(length(x)), nonneg = rep(TRUE, length(x)),
+  roundNearZeros = TRUE, tol = sqrt(.Machine$double.eps),
+  ...)
+}
+\arguments{
+  \item{E}{\code{editmatrix} or Equality constraint
+  matrix.}
+
+  \item{x}{named numeric vector. Naming is optional if
+  \code{E} is an equality constraint matrix.}
+
+  \item{...}{extra parameters to pass to
+  \code{deductiveZeros,matrix}}
+
+  \item{b}{Equality constraint constant vector}
+
+  \item{adapt}{logical vector. Extra values to adapt, order
+  must be the same as in \code{x}}
+
+  \item{nonneg}{logical vector of length(x). Determines
+  which x-values have to obey nonnegativity constraints.}
+
+  \item{roundNearZeros}{Round near zero values of \code{A}
+  before determining the sign?}
+
+  \item{tol}{tolerance used for zero-rounding.}
+}
+\description{
+  Find out which variables can deductively be imputed with
+  0
+
+  Interface for deductiveZeros for objects of class
+  editmatrix. This interface is robust for variables in
+  \code{x} not occuring in \code{E}.
+
+  Suppose \eqn{x} is a record under linear constraints
+  \eqn{Ax=b} and \eqn{x\geq0}. In certain cases some
+  missing values can be imputed uniquely with zeros. For
+  example, in the case that \eqn{x_1+x_2=x_3}, if \eqn{x_2}
+  is missing and \eqn{x_1=x_3\geq 0}, then \eqn{x_2} is
+  uniquely determined to be 0. This function returns a
+  boolean vector indicating which of the missing values are
+  uniquely determined to be zero.
+}
+\details{
+  There is some added flexibility. Users my define 'extra
+  missings' by specifying the \code{adapt} vector.
+
+  By default it is assumed that all values must obey the
+  nonnegativity constraint. However this can be determined
+  by specifying \code{nonneg}.
+}
+\examples{
+
+# a simple example"
+E <- editmatrix(c(
+    "x1 + x2 + x3 == xt",
+    "x1 >= 0", "x2>=0","x3>=0", "xt>=0"))
+x <- c(x1=10,x2=NA,x3=5,xt=15)
+
+# with deductiveZeros we get:
+( I <- deductiveZeros(E,x) )
+x[I] <- 0
+
+any(violatedEdits(E,x))
+
+# This example is taken from De Waal et al (2011) (Examples 9.1-9.2)
+E <- editmatrix(c(
+    "x1 + x2      == x3",
+    "x2           == x4",
+    "x5 + x6 + x7 == x8",
+    "x3 + x8      == x9",
+    "x9 - x10     == x11",
+    "x6 >= 0",
+    "x7 >= 0"
+))
+
+x <- c(x1 = 145, x2 = NA, x3 = 155, x4 = NA, x5 = 86, x6 = NA, x7 = NA, x8 = 86, x9 = NA, x10 = 217, x11 = NA)
+
+# determine zeros:
+I <- deductiveZeros(E,x)
+# impute:
+x[I] <- 0
+
+
+
+}
+\seealso{
+  \code{\link{deduImpute}}, \code{\link{solSpace}}
+}
+

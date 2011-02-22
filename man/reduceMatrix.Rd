@@ -1,22 +1,34 @@
 \name{reduceMatrix}
 \alias{reduceMatrix}
-\title{Apply reduction method from Scholtus (2008)...}
-\usage{reduceMatrix(A)
+\title{Apply reduction method from Scholtus (2008)}
+\usage{
+  reduceMatrix(A)
 }
-\description{Apply reduction method from Scholtus (2008)}
-\details{Apply the reduction method in the appendix of Scholtus (2008) to a matrix.
-Let \eqn{A} with coefficients in \eqn{\{-1,0,1\}}. If, after a possible 
-permutation of columns it can be written 
-in the form \eqn{A=[B,C]} where each column in \eqn{B} has at most 1 nonzero
-element, then \eqn{A} is totally unimodular if and only if \eqn{C} is totally
-unimodular. By transposition, a similar theorem holds for the rows of A. This
-function iteratively removes rows and columns with only 1 nonzero element
-from \eqn{A} and returns the reduced result.}
-\value{The reduction of A.}
-\seealso{\code{\link{isTotallyUnimodular}}}
-\references{Scholtus S (2008). Algorithms for correcting some obvious
-inconsistencies and rounding errors in business survey data. Technical
-Report 08015, Netherlands.}
-\arguments{\item{A}{An object of class matrix in \eqn{\{-1,0,1\}^{m\times n}}.}
+\arguments{
+  \item{A}{An object of class matrix in
+  \eqn{\{-1,0,1\}^{m\times n}}.}
+}
+\value{
+  The reduction of A.
+}
+\description{
+  Apply the reduction method in the appendix of Scholtus
+  (2008) to a matrix. Let \eqn{A} with coefficients in
+  \eqn{\{-1,0,1\}}. If, after a possible permutation of
+  columns it can be written in the form \eqn{A=[B,C]} where
+  each column in \eqn{B} has at most 1 nonzero element,
+  then \eqn{A} is totally unimodular if and only if \eqn{C}
+  is totally unimodular. By transposition, a similar
+  theorem holds for the rows of A. This function
+  iteratively removes rows and columns with only 1 nonzero
+  element from \eqn{A} and returns the reduced result.
+}
+\references{
+  Scholtus S (2008). Algorithms for correcting some obvious
+  inconsistencies and rounding errors in business survey
+  data. Technical Report 08015, Netherlands.
+}
+\seealso{
+  \code{\link{isTotallyUnimodular}}
 }
 

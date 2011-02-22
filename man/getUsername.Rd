@@ -1,0 +1,16 @@
+\name{getUsername}
+\alias{getUsername}
+\title{Get name of R user.}
+\value{
+  The username
+}
+\description{
+  Get name of R user.
+}
+\details{
+  This function returns the username.
+
+  This function is not exported.
+}
+\keyword{internal}
+
