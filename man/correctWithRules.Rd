@@ -1,0 +1,54 @@
+\name{correctWithRules}
+\alias{correctWithRules}
+\title{Deterministic correction}
+\usage{
+  correctWithRules(rules, dat, strict = TRUE)
+}
+\arguments{
+  \item{rules}{object of class
+  \code{\link{correctionRules}}}
+
+  \item{dat}{\code{data.frame}}
+
+  \item{strict}{If \code{TRUE}, an error is produced when
+  the rules use variables other than in the
+  \code{data.frame}.}
+}
+\value{
+  list with altered data (\code{$corrected}) and a list of
+  alterations (\code{$corrections}).
+}
+\description{
+  Apply simple replacement rules to a \code{data.frame}.
+}
+\section{Details}{
+  This function applies the the \code{rules} one by one to
+  \code{dat} and logs their actions. Rules are excuted in
+  order of occurrence in the \code{\link{correctionRules}}
+  so order may matter for the final result. Rules are
+  applied to one record at the time, so the use of
+  statistical funtions such as \code{mean} is useless, and
+  forbidden by default. See \code{\link{correctionRules}}
+  for details on the type of rules that are possible.
+}
+\examples{
+## Some example data
+dat <- data.frame(
+   x = c(NA, 2, 0,-10),
+   y = c(1, NA,NA, 6)
+)
+
+## a few rules
+u <- correctionRules(expression(
+   if ( is.na(x) ) x <- 0,
+   if ( x == 0 && is.na(y) ) y <- 0,
+   if ( is.na(y) ) y <- 1,
+   if ( x < 0 ) y <- 0
+))
+
+correctWithRules(u,dat)
+}
+\seealso{
+  \code{\link{correctionRules}}
+}
+

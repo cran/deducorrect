@@ -1,0 +1,88 @@
+\name{correctionRules}
+\alias{as.character.correctionRules}
+\alias{correctionRules}
+\alias{correctionRules.character}
+\alias{correctionRules.expression}
+\alias{getVars.correctionRules}
+\alias{print.correctionRules}
+\title{Rules for deterministic correction}
+\usage{
+  correctionRules(x, strict = TRUE,
+    allowed = getOption("allowedSymbols"), ...)
+
+  \method{correctionRules}{character} (x, strict = TRUE,
+    allowed = getOption("allowedSymbols"), file = TRUE,
+    ...)
+
+  \method{correctionRules}{expression} (x, strict = TRUE,
+    allowed = getOption("allowedSymbols"), ...)
+
+  \method{print}{correctionRules} (x, ...)
+
+  \method{as.character}{correctionRules} (x,
+    oneliner = FALSE, ...)
+
+  \method{getVars}{correctionRules} (E, ...)
+}
+\arguments{
+  \item{x}{\code{character} or \code{expression} vector.}
+
+  \item{strict}{If \code{TRUE} an error is thrown if any
+  forbidden symbol is used (see details).}
+
+  \item{allowed}{A \code{character} vector of allowed
+  symbols}
+
+  \item{...}{Currently unused.}
+
+  \item{file}{If \code{file=TRUE}, \code{x} is treated as a
+  filename from which the rules are read.}
+
+  \item{oneliner}{Coerce to oneliner}
+
+  \item{E}{object of class \code{\link{correctionRules}}}
+}
+\value{
+  \code{correctionRules} returns an object of class
+  \code{correctionRules}
+
+  \code{getVars} returns a character vector of variable
+  names.
+}
+\description{
+  Rules for deterministic correction
+}
+\section{Details}{
+  Data editing processes are rarely completely governed by
+  in-record consistency rules. Many \emph{ad-hoc} rules are
+  commonly used to impute empty or erroneous values. Such
+  rules are often applied manually or hidden in source
+  code. This function, together with
+  \code{\link{correctWithRules}} allows for easy definition
+  and execution of simle deterministic replacement rules.
+
+  These functions are ment to support very simple rules,
+  such as \emph{if variable x is missing, then set it to
+  zero}. Such actions usually basically model-free
+  corrections stemming from subject-matter knowledge. Given
+  the nature of such rules, the type of rules are by
+  default limited to R-statements containing conditionals
+  (\code{if}-\code{else}), arithmetic and logical
+  operators, and brackets and assignment operators. see
+  \code{getOption('allowedSymbols')} for a complete list.
+
+  If you cannot execute your 'simple' corrections with just
+  these functions, we strongly recommend to write a
+  separate imputation or correction routine. However, it's
+  a free world, so you may alter the list of allowed
+  symbols as you wish.
+}
+
+\section{Note}{
+  \code{getVars} is overloaded from the \code{editrules}
+  package.
+}
+\seealso{
+  \code{\link{correctWithRules}}
+}
+

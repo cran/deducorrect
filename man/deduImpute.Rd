@@ -13,7 +13,7 @@
     ...)
 
   \method{deduImpute}{editmatrix} (E, dat, adapt = NULL,
-    tol = sqrt(.Machine$double.eps), ...)
+    tol = sqrt(.Machine$double.eps), round = TRUE, ...)
 }
 \arguments{
   \item{E}{An \code{editmatrix} or \code{editarray}}
@@ -30,6 +30,8 @@
 
   \item{tol}{tolerance to use in \code{\link{solSpace}} and
   in \code{\link{deductiveZeros}}}
+
+  \item{round}{should the result be rounded?}
 }
 \value{
   A \code{\link{deducorrect-object}}
