@@ -24,7 +24,9 @@ The algorithm applies all combinations of (user-allowed) flip- and swap combinat
 the number of actions (flips+swaps) that have to be taken to correct a record. When multiple solutions are found, the
 solution of minimal weight is chosen. The user may provide a weight vector with weights for every flip and every swap,
 or a named weight vector with a weight for every variable. If the weights do not single out a solution, the first one
-found is chosen.}
+found is chosen.
+
+If arguments \code{flip} or \code{swap} contain a variable not in \code{E}, these variables will be ignored by the algorithm.}
 \value{a \code{\link{deducorrect-object}}. The \code{status} slot has the following columns for every records in \code{dat}.
 
 \tabular{ll}{

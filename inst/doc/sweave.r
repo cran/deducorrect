@@ -1,3 +1,0 @@
-
-Sweave("deducorrect-vignette.Snw")
-

@@ -1,7 +1,7 @@
 \name{correctRounding}
 \alias{correctRounding}
 \title{Correct records under linear restrictions for rounding errors...}
-\usage{correctRounding(R, dat, Q, fixate, delta=2, K=10, round=TRUE)
+\usage{correctRounding(R, dat, Q, fixate, delta=2, K=10, round=TRUE, assumeUnimodularity=FALSE)
 }
 \description{Correct records under linear restrictions for rounding errors}
 \details{This algorithm tries to detect and repair records that violate linear (in)equality constraints by correcting possible rounding errors as described by Scholtus(2008).
@@ -24,6 +24,7 @@ Report 08015, Statistics Netherlands.}
 \item{delta}{tolerance on checking for rounding error}
 \item{K}{number of trials per record. See details}
 \item{round}{should the solution be a rounded, default TRUE}
+\item{assumeUnimodularity}{If \code{FALSE}, a test is performed before corrections are computed (expensive).}
 }
 \examples{require(editrules)
 
