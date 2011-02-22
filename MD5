@@ -1,6 +1,6 @@
-3f75b10af4bce5b5fb7150f488402d74 *DESCRIPTION
+a8ba8954ceeb430d594861d1deb142ad *DESCRIPTION
 590a151ce6c67a9d77b4ef359085d161 *NAMESPACE
-eb4adeb2108f8881e6d01f6801957722 *NEWS
+578d0feff557c7cc426db55dc9b62c93 *NEWS
 acdc3a25389c3cdb76ea20744423e3c0 *R/S3deducorrect.R
 0b65c06f28710df85322c71dd494fdf1 *R/correctRounding.R
 27812297c1eb4d48d225fd70841c9cc4 *R/correctSigns.R
@@ -8,7 +8,7 @@ acdc3a25389c3cdb76ea20744423e3c0 *R/S3deducorrect.R
 bc8afef8b01eb508fb777efbf2dab923 *R/deduImpute.R
 14526219499df06b27a22ebf864f281d *R/deductiveLevels.R
 d722ee0fed4363825ea503777ef4cc07 *R/deductiveZeros.R
-735d473d57a6ecfdbe173a0162a62175 *R/deterministic.R
+b9ed9aa8f1cf02d69488233623fa0499 *R/deterministic.R
 5538f5c2aa91b1071d11f373403ca1eb *R/pkg.R
 03e542ff1a34d8ff61362f85a865cd55 *R/revert.R
 1f14454c67a90670d7006261ff72c232 *R/solSpace.R
@@ -16,8 +16,9 @@ d722ee0fed4363825ea503777ef4cc07 *R/deductiveZeros.R
 672cd21916b810eb2aedc865621670b8 *R/unimodularity.R
 552b0300633e9eccf924f04278c3298d *R/util.R
 617611783e1564b93dad9b1393d3ddfc *REFERENCES.bib
+4cd58160f28477a28205c211f4ce103b *inst/doc/deducorrect-vignette.R
 3061b8fbe467c570e9f9b6a96db4d6af *inst/doc/deducorrect-vignette.Rnw
-69e98eebcfabcf862eb9bbfdfb917852 *inst/doc/deducorrect-vignette.pdf
+33a5f920329be50cb983411391423206 *inst/doc/deducorrect-vignette.pdf
 e2acb695d25d1abdb2202b633b4482e4 *inst/doc/index.html
 5895facbeae142ed8075c9b689ffe97f *inst/doc/scholtus2008.pdf
 7cbc63532bc882d86cdf57f4fa25534e *inst/doc/scholtus2009.pdf
@@ -28,7 +29,7 @@ ab314e87c27ae49df806d860ec966515 *inst/doc/vanderlooDeJongeScholtus2011.pdf
 80dae453d21471891cd91c39c628ca41 *inst/tests/testCorrectTypos.R
 33c295ac9f96f304cd67fcfebc51cd85 *inst/tests/testDeduImpute.R
 c85da4f4dce892fa72cff87da27888be *inst/tests/testDeductiveLevels.R
-b164d20f26668a88b5f6b862186b3d1d *inst/tests/testDeterministic.R
+6cd6781e8de1e844710694b9374c3d7e *inst/tests/testDeterministic.R
 13e08d1703083ed8372e5bee5425a604 *inst/tests/testStringDistance.R
 0e6903802f8edaf5da51f7c8b51c67d9 *inst/tests/testnewdeducorrect.R
 73fee98c610a4dcdda55ad9bb95649cd *man/allTotallyUnimodular.Rd
@@ -43,7 +44,7 @@ e886cf448d14a52f20aaf82b6877f24e *man/damerauLevenshteinDistance.Rd
 cf6b2761cad4df2299c5bf6b562e4d55 *man/deducorrect-object.Rd
 46fb360c1f96fe2c68d74f2de5d6b48d *man/deducorrect-package.Rd
 d28492a9042d114b07345ef617d687e3 *man/deductiveLevels.Rd
-664636d157f9d13d90bebfaeb2eaa801 *man/deductiveZeros.Rd
+24f4cb794a5d6ce7e16e864523cc781c *man/deductiveZeros.Rd
 459df91c732352924d51739bfa87e792 *man/getSignCorrection.Rd
 a4aa6169c4c2ab2046db97a2c70c47a1 *man/getTypoCorrection.Rd
 f11940069fe7b77a01b07f6cc6228e08 *man/getUsername.Rd
@@ -54,7 +55,7 @@ f11940069fe7b77a01b07f6cc6228e08 *man/getUsername.Rd
 00a33803462032081e5194688206169f *man/raghavachari.Rd
 7e1145486b7b2e9aec13bfb630c5727a *man/reduceMatrix.Rd
 cc9e5d45160db3022feea73dfe452bb2 *man/scapegoat.Rd
-293287d62178b7a03a51d41588654333 *man/solSpace.Rd
+c923c0b7e4a9befbb22a669b0caa31b1 *man/solSpace.Rd
 8fde01e651777f49ff2d7ba7bbb4cc56 *man/status.Rd
 33b60d2dc6a647906fad8a9eb0e93d53 *man/tree.Rd
 3061b8fbe467c570e9f9b6a96db4d6af *vignettes/deducorrect-vignette.Rnw
