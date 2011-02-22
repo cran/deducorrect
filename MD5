@@ -1,6 +1,6 @@
-82b82960853a909cc7496bd890aeeaa5 *DESCRIPTION
+738f1896cd33b672983f73db16c6c353 *DESCRIPTION
 081881b3f0bdc0411259dc0d1fbc54c4 *NAMESPACE
-22c5cd9e9a4fedc9942e8b563bc62fea *NEWS
+1535aa9ae8b752a7e63edd012e80a1db *NEWS
 c7ac88f0cf926205048ce4cdf7137760 *R/S3deducorrect.R
 3f039abef51e20b7f4c9b1305f13a431 *R/correctRounding.R
 963798070e4bd25154c3967317ef7a72 *R/correctSigns.R
@@ -16,10 +16,10 @@ eca9acef7866150ce96feac8b47081d9 *R/solSpace.R
 617611783e1564b93dad9b1393d3ddfc *REFERENCES.bib
 58786609978606c8f4fafcfd45f6789b *inst/doc.zip
 63c7e1baf6e08b1674d03f6b19512030 *inst/doc/buildVignette.bash
-a0a78fa2d402bb0ed68e13bdfcbee863 *inst/doc/deducorrect-correction.Rnw
-7346b5fb21207fe501bf49f717c2579e *inst/doc/deducorrect-correction.pdf
+70cc2779e643c3bbbe609d225a8b895b *inst/doc/deducorrect-correction.Rnw
+9288ded9e852ca9573e2a236fe53e429 *inst/doc/deducorrect-correction.pdf
 bb0b2d67983995b6a6ad01fa96d11d02 *inst/doc/deducorrect-imputation.Rnw
-2bcd05eb6014e6f6475821dda18de213 *inst/doc/deducorrect-imputation.pdf
+a5e69f2ce967ab58fd76f3aef25dd113 *inst/doc/deducorrect-imputation.pdf
 0a1dcb49d8d87630782500d4439e525f *inst/doc/deducorrect.bib
 0bb5f94083b00d0244498a8853f10889 *inst/doc/index.html
 669e4a98b8ca4f0761780a7607ed3225 *inst/doc/mySweave.sty
