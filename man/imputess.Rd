@@ -2,8 +2,8 @@
 \alias{imputess}
 \title{Impute values from solution space}
 \usage{
-  imputess(x, x0, C, z = NULL, tol =
-  sqrt(.Machine$double.eps))
+  imputess(x, x0, C, z = NULL,
+    tol = sqrt(.Machine$double.eps))
 }
 \arguments{
   \item{x}{(named) numerical vector to be imputed}
@@ -95,10 +95,10 @@ d$corrections
 
 # Here's an example from Katrika (2001) [but see De Waal et al (2011), ex. 9.3)]
 E <- editarray(c(
-    "x1 \%in\% letters[1:4]",
-    "x2 \%in\% letters[1:3]",
-    "x3 \%in\% letters[1:3]",
-    "x4 \%in\% letters[1:2]",
+    "x1 \\\%in\\\% letters[1:4]",
+    "x2 \\\%in\\\% letters[1:3]",
+    "x3 \\\%in\\\% letters[1:3]",
+    "x4 \\\%in\\\% letters[1:2]",
     "if (x2 == 'c'  & x3 != 'c' & x4 == 'a' ) FALSE",
     "if (x2 != 'a'  & x4 == 'b') FALSE",
     "if (x1 != 'c'  & x2 != 'b' & x3 != 'a') FALSE",

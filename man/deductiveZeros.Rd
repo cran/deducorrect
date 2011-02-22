@@ -8,10 +8,10 @@
 
   \method{deductiveZeros}{editmatrix} (E, x, ...)
 
-  \method{deductiveZeros}{matrix} (E, x, b, adapt =
-  logical(length(x)), nonneg = rep(TRUE, length(x)),
-  roundNearZeros = TRUE, tol = sqrt(.Machine$double.eps),
-  ...)
+  \method{deductiveZeros}{matrix} (E, x, b,
+    adapt = logical(length(x)),
+    nonneg = rep(TRUE, length(x)), roundNearZeros = TRUE,
+    tol = sqrt(.Machine$double.eps), ...)
 }
 \arguments{
   \item{E}{\code{editmatrix} or Equality constraint

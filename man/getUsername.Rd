@@ -1,6 +1,9 @@
 \name{getUsername}
 \alias{getUsername}
 \title{Get name of R user.}
+\usage{
+  getUsername()
+}
 \value{
   The username
 }

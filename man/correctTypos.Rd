@@ -3,7 +3,7 @@
 \title{Correct records under linear restrictions using typographical error suggestions}
 \usage{
   correctTypos(E, dat, fixate = NULL, cost = c(1, 1, 1, 1),
-  eps = sqrt(.Machine$double.eps), maxdist = 1)
+    eps = sqrt(.Machine$double.eps), maxdist = 1)
 }
 \arguments{
   \item{E}{\code{\link{editmatrix}} that constrains

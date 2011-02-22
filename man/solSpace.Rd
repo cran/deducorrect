@@ -6,11 +6,13 @@
 \usage{
   solSpace(E, x, ...)
 
-  \method{solSpace}{editmatrix} (E, x, adapt =
-  logical(length(x)), checkFeasibility = TRUE, ...)
+  \method{solSpace}{editmatrix} (E, x,
+    adapt = logical(length(x)), checkFeasibility = TRUE,
+    ...)
 
-  \method{solSpace}{matrix} (E, x, b, adapt =
-  logical(length(x)), tol = sqrt(.Machine$double.eps), ...)
+  \method{solSpace}{matrix} (E, x, b,
+    adapt = logical(length(x)),
+    tol = sqrt(.Machine$double.eps), ...)
 }
 \arguments{
   \item{E}{and \code{editmatrix} or equality constraint

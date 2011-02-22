@@ -2,8 +2,8 @@
 \alias{getTypoCorrection}
 \title{Check record validity and suggest typo corrections}
 \usage{
-  getTypoCorrection(E, x, fixate = FALSE, eps =
-  sqrt(.Machine$double.eps), maxdist = 1)
+  getTypoCorrection(E, x, fixate = FALSE,
+    eps = sqrt(.Machine$double.eps), maxdist = 1)
 }
 \arguments{
   \item{E}{editmatrix}

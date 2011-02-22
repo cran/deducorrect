@@ -3,7 +3,7 @@
 \title{workhorse for correctSigns}
 \usage{
   getSignCorrection(r, A1, C1, eps, A2, C2, epsvec, flip,
-  swap, w, swapIsOneFlip, maxActions, maxCombinations)
+    swap, w, swapIsOneFlip, maxActions, maxCombinations)
 }
 \arguments{
   \item{r}{The numerical record to correct}

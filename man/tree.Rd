@@ -2,8 +2,8 @@
 \alias{tree}
 \title{Solve an optimization problem using a tree algorithm as described in Scholtus (2009)}
 \usage{
-  tree(B, kappa, delta = as.logical(rep(NA, ncol(B))), sol
-  = NULL)
+  tree(B, kappa, delta = as.logical(rep(NA, ncol(B))),
+    sol = NULL)
 }
 \arguments{
   \item{B}{binary matrix with suggested corrections per

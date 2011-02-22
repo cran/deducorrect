@@ -7,10 +7,10 @@
   deduImpute(E, dat, adapt = NULL, ...)
 
   \method{deduImpute}{editarray} (E, dat, adapt = NULL,
-  ...)
+    ...)
 
   \method{deduImpute}{editmatrix} (E, dat, adapt = NULL,
-  tol = sqrt(.Machine$double.eps), ...)
+    tol = sqrt(.Machine$double.eps), ...)
 }
 \arguments{
   \item{E}{An \code{editmatrix} or \code{editarray}}
@@ -18,8 +18,8 @@
   \item{dat}{A \code{data.frame}}
 
   \item{adapt}{(optional) A boolean array of dim(dat), e.g.
-  the result editrules::localizeErrors(E,dat). Column names
-  must match those of \code{dat}.}
+  the result editrules::localizeErrors(E,dat).  Column
+  names must match those of \code{dat}.}
 
   \item{...}{arguments to be passed to
   \code{\link{solSpace}} (numerical data) or
@@ -103,10 +103,10 @@ d$corrections
 
 # Here's an example from Katrika (2001) [but see De Waal et al (2011), ex. 9.3)]
 E <- editarray(c(
-    "x1 \%in\% letters[1:4]",
-    "x2 \%in\% letters[1:3]",
-    "x3 \%in\% letters[1:3]",
-    "x4 \%in\% letters[1:2]",
+    "x1 \\\%in\\\% letters[1:4]",
+    "x2 \\\%in\\\% letters[1:3]",
+    "x3 \\\%in\\\% letters[1:3]",
+    "x4 \\\%in\\\% letters[1:2]",
     "if (x2 == 'c'  & x3 != 'c' & x4 == 'a' ) FALSE",
     "if (x2 != 'a'  & x4 == 'b') FALSE",
     "if (x1 != 'c'  & x2 != 'b' & x3 != 'a') FALSE",

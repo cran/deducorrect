@@ -2,8 +2,9 @@
 \alias{correctRounding}
 \title{Correct records under linear restrictions for rounding errors}
 \usage{
-  correctRounding(R, dat, Q = NULL, fixate = NULL, delta =
-  2, K = 10, round = TRUE, assumeUnimodularity = FALSE)
+  correctRounding(R, dat, Q = NULL, fixate = NULL,
+    delta = 2, K = 10, round = TRUE,
+    assumeUnimodularity = FALSE)
 }
 \arguments{
   \item{R}{editmatrix \eqn{Rx = a}, matrix may contain

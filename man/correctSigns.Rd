@@ -3,9 +3,11 @@
 \title{Correct sign errors and value interchanges in data records}
 \usage{
   correctSigns(E, dat, flip = getVars(E), swap = list(),
-  maxActions = length(flip) + length(swap), maxCombinations
-  = 1e+05, eps = sqrt(.Machine$double.eps), weight = rep(1,
-  length(flip) + length(swap)), fixate = NA)
+    maxActions = length(flip) + length(swap),
+    maxCombinations = 1e+05,
+    eps = sqrt(.Machine$double.eps),
+    weight = rep(1, length(flip) + length(swap)),
+    fixate = NA)
 }
 \arguments{
   \item{E}{An object of class
@@ -35,14 +37,14 @@
   errors.}
 
   \item{weight}{weight vector. Weights can be assigned
-  either to actions (flips and swap) or to variables. If
+  either to actions (flips and swap) or to variables.  If
   \code{length(weight)==length(flip)+length(swap)}, weights
   are assiged to actions, if
   \code{length(weight)==ncol(E)}, weights are assigned to
   variables. In the first case, the first
   \code{length{flip}} weights correspond to flips, the rest
-  to swaps. A warning is issued in the second case when the
-  weight vector is not named. See the examples for more
+  to swaps.  A warning is issued in the second case when
+  the weight vector is not named. See the examples for more
   details.}
 
   \item{fixate}{a \code{character} vector with names of
