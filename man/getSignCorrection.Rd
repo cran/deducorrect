@@ -5,7 +5,6 @@
     maxActions, maxCombinations)
 }
 \description{Workhorse for correctSigns}
-\details{Warning. this function replaces the deprecated \code{\link{old.getSignCorrection}}}
 \value{a list containing
 \tabular{ll}{
 \code{S} \tab \code{n x length(r)} array with corrected versions of \code{r} \cr

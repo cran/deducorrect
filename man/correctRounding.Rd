@@ -1,7 +1,7 @@
 \name{correctRounding}
 \alias{correctRounding}
 \title{Correct records under linear restrictions for rounding errors...}
-\usage{correctRounding(R, dat, Q, delta=2, K=10, round=TRUE)
+\usage{correctRounding(R, dat, Q, fixate, delta=2, K=10, round=TRUE)
 }
 \description{Correct records under linear restrictions for rounding errors}
 \details{This algorithm tries to detect and repair records that violate linear (in)equality constraints by correcting possible rounding errors as described by Scholtus(2008).
@@ -17,9 +17,10 @@ inconsistencies and rounding errors in business survey data. Technical
 Report 08015, Statistics Netherlands.}
 \value{A \code{\link[=deducorrect-object]{deducorrrect}} object.}
 \seealso{\code{\link{deducorrect-object}} \code{\link{status}}}
-\arguments{\item{R}{editmatrix \eqn{Rx = a}}
+\arguments{\item{R}{editmatrix \eqn{Rx = a}, matrix may contain inequalities}
 \item{dat}{\code{data.frame} with the data to be corrected}
-\item{Q}{optional editmatrix \eqn{Qx \ge b}}
+\item{Q}{deprecated, (add inequalities to R)}
+\item{fixate}{\code{character} with variable names that should not be changed.}
 \item{delta}{tolerance on checking for rounding error}
 \item{K}{number of trials per record. See details}
 \item{round}{should the solution be a rounded, default TRUE}

@@ -5,7 +5,7 @@
     length(swap), maxCombinations=1e+05, eps=sqrt(.Machine$double.eps),
     weight=rep(1, length(flip) + length(swap)), fixate=NA)
 }
-\description{Correct sign errors and value interchanges in data records. It replaces \code{\link{old.correctSigns}}.}
+\description{Correct sign errors and value interchanges in data records.}
 \details{This algorithm tries to correct records violating linear equalities by sign flipping and/or value interchanges.
 Linear inequalities are taken into account when judging possible solutions. If one or more inequality restriction
 is violated, the solution is rejected. It is important to note that the \code{\link{status}} of a record has

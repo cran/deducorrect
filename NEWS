@@ -1,9 +1,19 @@
+version 0.9-3
+- vignette virtually complete
+- made detection of username more robust
+- correctRounding does not allow generation of new inequality violations, compatible with correctTypos.
+- correctTypos now checks solution suggestions for generating new inequality violations.
+- set variable Q in correctRounding to deprecated
+- fixed bug in isTotallyUnimodular
+- old.correctSigns now removed
+- added index.html for vignettes
+
 version 0.9-2
 - some work on vignette
 - deducorrect object how has "user" slot
 - correctSigns has new, easier interface and can take inequalities into account.
 - correctSigns now breaks of a 1e5 sign flip combinations - can be adjusted by setting "maxCombinations"
-- solved bug causing correctSigs to crash if no records at all were fixed.
+- solved bug causing correctSigns to crash if no records at all were fixed.
 - correctRounding failed when running on R 2.10, is fixed.
 
 version 0.9-1

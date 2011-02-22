@@ -6,7 +6,6 @@
 #'
 #' \itemize{
 #' \item{\code{\link{correctRounding}}}
-#' \item{\code{\link{old.correctSigns}}}
 #' \item{\code{\link{correctTypos}}}
 #' \item{\code{\link{deducorrect-object}} and \code{\link{status}} for output specification}
 #' \item{\code{\link{isTotallyUnimodular}}}
@@ -21,10 +20,4 @@
 {}
 
 
-.onLoad <- function(libname, pkgname){
-    cat("\nATTENTION:\n")
-    cat("  As of version 0.9-2, the function correctSigns is no longer backwards compatible.\n")
-    cat("  Use old.correctSigns for the old interface. This function will dissapear before the release of 1.0.\n")
-
-}
 

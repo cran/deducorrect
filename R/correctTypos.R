@@ -57,15 +57,12 @@ correctTypos <- function( E
                         
    stopifnot(is.editmatrix(E), is.data.frame(dat))
    
-
+   # separate equalities and inequalities
    a <- getC(E)
    eq <- getOps(E) == "=="
-   if (!all(eq)){
-      warning("E contains inequalities. Edits ", which(!eq)," will be ignored.\n Records with status 'valid' or 
-      'corrected' may therefore be invalid for the complete editmatrix E.")
-      E <- as.editmatrix(E[eq,,drop=FALSE], a[eq])
-      a <- a[eq]
-   }
+   F <- E[!eq,]
+   E <- E[eq,]
+   a <- a[eq]
    vars <- getVars(E)
    
    fixate <- if(is.null(fixate)) {rep(FALSE, length(vars))}
@@ -78,10 +75,11 @@ correctTypos <- function( E
    status <- status(n)
    corrections <- NULL
    
-  # only loop over complete records
-  cc <- which(complete.cases(m))
+   # only loop over complete records
+   cc <- which(complete.cases(m))
 	for (i in cc){
-      chk <- getTypoCorrection(E,m[i,], fixate=fixate, eps=eps, maxdist=maxdist)
+      x <- m[i,]
+      chk <- getTypoCorrection(E, x, fixate=fixate, eps=eps, maxdist=maxdist)
       
       status[i] <- chk$status
       
@@ -107,12 +105,21 @@ correctTypos <- function( E
       }
       cor <- cor[sol[1,],,drop=FALSE]
       
-      #m[i, cor[,"var"]]  <- cor[,"new"]      
-      m[i, cor[,1]]  <- cor[,3]
+      #m[i, cor[,"var"]]  <- cor[,"new"]
+      x[cor[,1]] <- cor[,3]
       
       # check if record is now valid with the corrections applied
       status[i] <- if (sum(abs(a-E%*%m[i,]) > eps) == 0) "corrected"
                    else "partial"
+                   
+      #TODO if any violatedEdits then solution is always partial
+      if (all(which(violatedEdits(F, x)) %in% which(violatedEdits(F,m[i,])))){
+         m[i,] <- x
+      }
+      else {
+         status[i] <- "invalid"
+         next
+      }
       cor <- cbind(row=rep(i, nrow(cor)), cor)
       corrections <- rbind(corrections, cor)      
 	}
@@ -162,9 +169,12 @@ getTypoCorrection <- function( E, x, fixate=FALSE, eps=sqrt(.Machine$double.eps)
    ret <- list(status=NA)
    
    a <- getC(E)
-      
+   M <- getMatrix(E)
+   
+   # we need this later to check for inequalities   
+   x_F <- as.data.frame(t(x))
    #violated edits (ignoring rounding errors)
-   E1 <- (abs(a-E%*%x) > eps)
+   E1 <- (abs(a-M%*%x) > eps)
    
    #non violated edits
    E2 <- !E1
@@ -175,12 +185,13 @@ getTypoCorrection <- function( E, x, fixate=FALSE, eps=sqrt(.Machine$double.eps)
       return(ret)
    }
    
+   B <- M != 0
    # set of variables that are involved in the violated edits
-   V1 <- if (any(E1)) colSums(abs(E[E1,,drop=FALSE])) != 0
+   V1 <- if (any(E1)) colSums(B[E1,,drop=FALSE]) != 0
          else FALSE
                
    # set of variables that are not involved in the non-violated edits and therefore can be edited
-   I0 <- if (any(E2)) colSums(abs(E[E2,,drop=FALSE])) == 0
+   I0 <- if (any(E2)) colSums(B[E2,,drop=FALSE]) == 0
          else TRUE
 
    # restrict I0 to the set of variables involved in violated edits that can be changed
@@ -198,11 +209,10 @@ getTypoCorrection <- function( E, x, fixate=FALSE, eps=sqrt(.Machine$double.eps)
    cor <- lapply( which(I0)
                 , function(i){
                      # edits valid for current variable v_i
-                     edits <- E1 & (E[,i] != 0)
-                     
+                     eqs <- E1 & (B[,i])
                      # correction candidates
                      #TODO check if solution has to be rounded!!!)
-                     x_i_c <- ( (a[edits]-(E[edits,-i, drop=FALSE] %*% x[-i])) / (E[edits,i]));
+                     x_i_c <- ( (a[eqs]-(M[eqs,-i, drop=FALSE] %*% x[-i])) / (M[eqs,i]))
                      # count their numbers
                      kap <- table(x_i_c)
                      x_i_c <- as.integer(rownames(kap))
@@ -233,7 +243,7 @@ getTypoCorrection <- function( E, x, fixate=FALSE, eps=sqrt(.Machine$double.eps)
    
    cor <- cor[valid,,drop=FALSE]
    # optimization matrix
-   B <- E[E1,cor[,1], drop=FALSE] != 0
+   B <- B[E1,cor[,1], drop=FALSE] != 0
    ret$cor <- cor
    ret$B <- B
    ret$status <- "partial"

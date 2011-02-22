@@ -1,3 +1,2 @@
 
 Sweave("deducorrect-vignette.Snw")
-
